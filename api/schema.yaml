@@ -1,0 +1,642 @@
+openapi: 3.0.0
+info:
+  title: Task-Tracker-service
+  description: Сервис для управления задачами
+  version: 1.0.0
+
+components:
+  schemas:
+    Token:
+      type: string
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+      required: [id, username, email]
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        discription:
+          type: string
+        status:
+          type: string
+          enum: [created, in_progress, done, dropped]
+        assignie:
+          type: bool
+        linkedBoard:
+          type: bool
+        deadline:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, title, type, status, updated_at]
+
+    Dashboard:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        discription:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, title, discription, updated_at]  
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        author:
+          type: string
+        text:
+          type: string
+        dateTime:
+          type: date-time
+      required: [author, text, dateTime]
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: int32
+          description: http-код ошибки
+        message:
+          type: string
+      required: [code, message]
+    
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /register:
+    summary: Регистрация пользователя
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+            required: [email, password]
+    responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /login:
+    post:
+      summary: Авторизация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        '200':
+          description: Успешная авторизация
+          headers:
+            Set=Cookie:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Неверные данные учетной записи
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/users:
+    get:
+      summary: Получение списка юзеров.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список юзеров.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/tasks:
+    get:
+      summary: Получение списка задач с фильтрацией по созданным или назначенным на текущего юзера.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: relation
+          in: query
+          description: Отношение выводимых задач к текущему юзеру.
+          required: false
+          schema:
+            type: string
+            enum: [created_by_me, assigned_to_me]
+            default: assigned_to_me
+        - name: status
+          in: query
+          description: Набор статусов для фильтрации.
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [created, in_progress, done, dropped]
+            default: created,in_progress
+      responses:
+        '200':
+          description: Список задач.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/tasks/{taskId}:
+    get:
+      summary: Просмотр данных задачи.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Данные конкретной задачи.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task:
+                    $ref: '#/components/schemas/Task'
+                  comments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'
+                  author: 
+                    $ref: '#/components/schemas/User'
+                  assignie: 
+                    $ref: '#/components/schemas/User'
+                  linkedBoard:
+                    type: object
+                    properties:
+                      id: 
+                        type: string
+                        format: uuid
+                      name: 
+                        type: string
+                required: [task, author]
+
+        '400':
+          description: Неверный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/tasks/create:
+    post:
+      summary: Создание новой задачи.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                discription:
+                  type: string
+                deadline:
+                  type: string
+                  format: date-time
+              required: [title]
+      responses:
+        '201':
+          description: Задача создана.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/tasks/update:
+    post:
+      summary: Обновление задачи.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                discription:
+                  type: string
+                status:
+                  type: string
+                assignie:
+                  type: string
+                  format: uuid
+                linkedBoard:
+                  type: string
+                  format: uuid
+                deadline:
+                  type: string
+                  format: date-time
+              required: [taskId]
+      responses:
+        '200':
+          description: Задача обновлена.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/tasks/comment:
+    post:
+      summary: Добавление комментария к задаче.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text: 
+                  type: string
+              required: [text]
+      responses:
+        '201':
+          description: Комментарий добавлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/dashboards:
+    get:
+      summary: Получение списка дашбордов, в которых текущий пользователь числится админом.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список дашбордов.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dashboard'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+
+  /protected/dashboards/{boardId}:
+    get:  
+      summary: Просмотр данных дашборда.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: boardId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+            description: Данные конкретного дашборда.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    dashboard:
+                      $ref: '#/components/schemas/Dashboard'
+                    tasks:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Task'
+                    admins: 
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/User'
+                  required: [dashboard, tasks, admins]
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/dashboards/create:
+    post:
+      summary: Создание нового дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                discription:
+                  type: string
+              required: [title]
+      responses:
+        '201':
+          description: Дашборд создан.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'        
+
+  /protected/dashboards/update:
+    post:
+      summary: Обновление дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boardId:
+                  type: string
+                  format: uuid
+                title:
+                  type: string
+                discription:
+                  type: string
+              required: [boardID]
+      responses:
+        '200':
+          description: Дашборд обновлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dashboard'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'        
+  
+  /protected/dashboards/delete:
+    post:
+      summary: Удаление дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boardId:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+            description: Удаление успешно.
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /protected/dashboards/addAdmin:
+    post: 
+      summary: Добавление админа дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boardId:
+                  type: string
+                  format: uuid
+                userId:
+                  type: string
+                  format: uuid
+              required: [boardId, userId]
+      responses:
+        '200':
+            description: Добавление успешно.
+            content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'      
+
+
+  /protected/dashboards/deleteAdmin:
+    post:   
+      summary: Удаление админа дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boardId:
+                  type: string
+                  format: uuid
+                userId:
+                  type: string
+                  format: uuid
+              required: [boardId, userId]
+      responses:
+        '200':
+            description: Удаление успешно.
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'  
