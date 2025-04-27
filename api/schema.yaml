@@ -37,11 +37,8 @@ components:
           enum: [created, in_progress, done, dropped]
         assignie:
           type: bool
-        linkedBoard:
+        board:
           type: bool
-        deadline:
-          type: string
-          format: date-time
         updated_at:
           type: string
           format: date-time
@@ -105,6 +102,8 @@ paths:
               email:
                 type: string
                 format: email
+              username:
+                type: string
               password:
                 type: string
             required: [email, password]
@@ -132,9 +131,8 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
-                  format: email
                 password:
                   type: string
               required: [email, password]
@@ -282,9 +280,9 @@ paths:
                   type: string
                 discription:
                   type: string
-                deadline:
+                linkedBoard:
                   type: string
-                  format: date-time
+                  format: uuid
               required: [title]
       responses:
         '201':
@@ -327,15 +325,13 @@ paths:
                   type: string
                 status:
                   type: string
+                  enum: [in_progress, done, dropped]
                 assignie:
                   type: string
                   format: uuid
                 linkedBoard:
                   type: string
                   format: uuid
-                deadline:
-                  type: string
-                  format: date-time
               required: [taskId]
       responses:
         '200':
