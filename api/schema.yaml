@@ -108,7 +108,7 @@ paths:
                   type: string
                 password:
                   type: string
-              required: [email, password]
+              required: [email, username, password]
       responses:
           '201':
             description: Пользователь создан
@@ -137,7 +137,7 @@ paths:
                   type: string
                 password:
                   type: string
-              required: [email, password]
+              required: [username, password]
       responses:
         '200':
           description: Успешная авторизация
@@ -367,9 +367,12 @@ paths:
             schema:
               type: object
               properties:
+                taskId:
+                  type: string
+                  format: uuid
                 text: 
                   type: string
-              required: [text]
+              required: [taskId, text]
       responses:
         '201':
           description: Комментарий добавлен.
