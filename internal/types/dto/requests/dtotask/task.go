@@ -1,9 +1,5 @@
 package dtotask
 
-import (
-	"task-tracker-service/internal/enum"
-)
-
 // Defaults are from internal/enum.
 type GetTasksParams struct {
 	Relation string   `schema:"relation,omitempty,default:assigned_to_me"`
@@ -19,10 +15,10 @@ type PostTasksCreateRequest struct {
 }
 
 type PostTasksUpdateRequest struct {
-	TaskId      string           `json:"taskId"`
-	Title       *string          `json:"title,omitempty"`
-	Status      *enum.TaskStatus `json:"status,omitempty"`
-	Discription *string          `json:"discription,omitempty"`
-	Assignie    *string          `json:"assignie,omitempty"`
-	LinkedBoard *string          `json:"linkedBoard,omitempty"`
+	TaskId      string  `json:"taskId"`
+	Title       *string `json:"title,omitempty"`
+	Status      *string `json:"status,omitempty"`
+	Discription *string `json:"discription,omitempty"`
+	Assignie    *string `json:"assignie,omitempty"`
+	LinkedBoard *string `json:"linkedBoard,omitempty"`
 }
