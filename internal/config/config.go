@@ -12,12 +12,13 @@ type Config struct {
 }
 
 type Server struct {
-	JWTKey       string        `env:"JWTKEY" env-required:"true"`
-	Host         string        `yaml:"host" env:"HOST" env-default:"localhost"`
-	Port         string        `yaml:"port" env:"PORT" env-default:"8080"`
-	ResponseTime time.Duration `yaml:"response_time" env-default:"100ms"`
-	RPS          int           `yaml:"rps" env-default:"1000"`
-	LogLevel     string        `yaml:"log_level" env-default:"info"`
+	JWTKey            string        `env:"JWTKEY" env-required:"true"`
+	Host              string        `yaml:"host" env:"HOST" env-default:"localhost"`
+	Port              string        `yaml:"port" env:"PORT" env-default:"8080"`
+	ResponseTime      time.Duration `yaml:"response_time" env-default:"100ms"`
+	RPS               int           `yaml:"rps" env-default:"1000"`
+	LogLevel          string        `yaml:"log_level" env-default:"info"`
+	AsyncHashingLimit int           `yaml:"async_hashing_limit" env-default:"10"`
 }
 
 type DBConn struct {

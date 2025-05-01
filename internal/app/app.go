@@ -24,7 +24,7 @@ type App struct {
 }
 
 func New(cfg *config.Config) (*App, error) {
-	cryptor := cryptor.New()
+	cryptor := cryptor.New(cfg.AsyncHashingLimit)
 	tokenizer := tokenizer.New(AppName, cfg.JWTKey)
 
 	logger, err := logger.New(os.Stdout, cfg.LogLevel)
@@ -40,12 +40,10 @@ func New(cfg *config.Config) (*App, error) {
 	service := service.New(storage, logger, cryptor, tokenizer)
 	controller := controller.New(service, logger)
 
-	router := mux.NewRouter()
-
 	return &App{
 		Server: &http.Server{
 			Addr:    fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port),
-			Handler: router,
+			Handler: configureRouter(controller),
 		},
 	}, nil
 }
@@ -57,4 +55,31 @@ func (s *App) Run() error {
 
 func (s *App) Shutdown() error {
 	return s.Server.Shutdown(context.Background())
+}
+
+func configureRouter(controller controller.Controller) *mux.Router {
+	router := mux.NewRouter()
+
+	router.HandleFunc("/register", controller.Register()).Methods(http.MethodPost)
+	router.HandleFunc("/login", controller.Login()).Methods(http.MethodPost)
+
+	protected := router.PathPrefix("").Subrouter()
+
+	protected.HandleFunc("/users", controller.GetUsers()).Methods(http.MethodGet)
+	protected.HandleFunc("/users/addBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
+
+	protected.HandleFunc("/tasks", controller.GetTasks()).Methods(http.MethodGet)
+	protected.HandleFunc("/tasks/{taskId:[1-9][0-9]*}", controller.GetTaskByID()).Methods(http.MethodGet)
+	protected.HandleFunc("/tasks/create", controller.CreateTask()).Methods(http.MethodPost)
+	protected.HandleFunc("/tasks/update", controller.UpdateTask()).Methods(http.MethodPost)
+
+	protected.HandleFunc("/comment", controller.Comment()).Methods(http.MethodPost)
+
+	protected.HandleFunc("/dashboards", controller.GetDashboards()).Methods(http.MethodGet)
+	protected.HandleFunc("/dashboards/{boardId:[1-9][0-9]*}", controller.GetDashboardByID()).Methods(http.MethodGet)
+	protected.HandleFunc("/dashboards/create", controller.CreateDashboard()).Methods(http.MethodPost)
+	protected.HandleFunc("/dashboards/update", controller.UpdateDashboard()).Methods(http.MethodPost)
+	protected.HandleFunc("/dashboards/delete", controller.DeleteDashboard()).Methods(http.MethodPost)
+
+	return router
 }
