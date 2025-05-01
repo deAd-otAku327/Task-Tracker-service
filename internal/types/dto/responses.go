@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"task-tracker-service/internal/enum"
+	"task-tracker-service/internal/types/enum"
 	"time"
 )
 
