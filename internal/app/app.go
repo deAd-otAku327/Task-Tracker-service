@@ -8,6 +8,7 @@ import (
 	"os"
 	"task-tracker-service/internal/config"
 	"task-tracker-service/internal/controller"
+	"task-tracker-service/internal/middleware"
 	"task-tracker-service/internal/service"
 	"task-tracker-service/internal/storage/db"
 	"task-tracker-service/internal/tokenizer"
@@ -38,12 +39,17 @@ func New(cfg *config.Config) (*App, error) {
 	}
 
 	service := service.New(storage, logger, cryptor, tokenizer)
+
 	controller := controller.New(service, logger)
+	middleware := middleware.New(tokenizer, logger, middleware.MwParams{
+		RpsLimit:      cfg.RPS,
+		RespTimeLimit: cfg.ResponseTime,
+	})
 
 	return &App{
 		Server: &http.Server{
 			Addr:    fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port),
-			Handler: configureRouter(controller),
+			Handler: configureRouter(controller, middleware),
 		},
 	}, nil
 }
@@ -57,16 +63,21 @@ func (s *App) Shutdown() error {
 	return s.Server.Shutdown(context.Background())
 }
 
-func configureRouter(controller controller.Controller) *mux.Router {
+func configureRouter(controller controller.Controller, middleware middleware.Middleware) *mux.Router {
 	router := mux.NewRouter()
+	router.Use(middleware.RpsLimit())
+	router.Use(middleware.Logging())
+	router.Use(middleware.ResponseTimeLimit())
 
 	router.HandleFunc("/register", controller.Register()).Methods(http.MethodPost)
 	router.HandleFunc("/login", controller.Login()).Methods(http.MethodPost)
 
 	protected := router.PathPrefix("").Subrouter()
+	protected.Use(middleware.Auth())
 
 	protected.HandleFunc("/users", controller.GetUsers()).Methods(http.MethodGet)
 	protected.HandleFunc("/users/addBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
+	protected.HandleFunc("/users/deleteBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
 
 	protected.HandleFunc("/tasks", controller.GetTasks()).Methods(http.MethodGet)
 	protected.HandleFunc("/tasks/{taskId:[1-9][0-9]*}", controller.GetTaskByID()).Methods(http.MethodGet)
