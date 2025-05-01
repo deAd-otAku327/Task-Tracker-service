@@ -10,6 +10,8 @@ type UserHandler interface {
 	Register() http.HandlerFunc
 	Login() http.HandlerFunc
 	GetUsers() http.HandlerFunc
+	AddBoardAdmin() http.HandlerFunc
+	DeleteBoardAdmin() http.HandlerFunc
 }
 
 type userHandler struct {
@@ -37,6 +39,18 @@ func (h *userHandler) Login() http.HandlerFunc {
 }
 
 func (h *userHandler) GetUsers() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+func (h *userHandler) AddBoardAdmin() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+func (h *userHandler) DeleteBoardAdmin() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 	}
