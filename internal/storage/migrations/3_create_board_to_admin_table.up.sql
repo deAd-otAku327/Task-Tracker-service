@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS board_to_admin
+(
+    id SERIAL PRIMARY KEY,
+    board_id INTEGER REFERENCES dashboards(id) ON DELETE CASCADE,
+    admin_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+);

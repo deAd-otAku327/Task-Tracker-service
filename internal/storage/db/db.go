@@ -9,6 +9,8 @@ import (
 	"task-tracker-service/internal/storage/db/dashboard"
 	"task-tracker-service/internal/storage/db/task"
 	"task-tracker-service/internal/storage/db/user"
+
+	_ "github.com/lib/pq"
 )
 
 type DB interface {

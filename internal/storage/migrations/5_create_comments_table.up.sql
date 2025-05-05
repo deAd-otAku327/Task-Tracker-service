@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS comments
+(
+    id SERIAL PRIMARY KEY,
+    author_id INTEGER NOT NULL REFERENCES users(id),
+    text TEXT NOT NULL,
+    dateTime TIMESTAMP NOT NULL DEFAULT NOW()
+);
