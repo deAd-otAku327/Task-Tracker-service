@@ -347,9 +347,9 @@ paths:
                   type: string
                 discription:
                   type: string
-                assignie:
+                assignie_id:
                   type: integer
-                linkedBoard:
+                linkedBoard_id:
                   type: integer
               required: [title]
       responses:
