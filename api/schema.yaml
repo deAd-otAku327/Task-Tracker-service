@@ -13,8 +13,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         username:
           type: string
         email:
@@ -26,8 +25,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         title:
           type: string
         discription:
@@ -48,8 +46,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         title:
           type: string
         discription:
@@ -63,8 +60,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         author:
           type: string
         text:
@@ -186,11 +182,9 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
                 userId:
-                  type: string
-                  format: uuid
+                  type: integer
               required: [boardId, userId]
       responses:
         '200':
@@ -226,11 +220,9 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
                 userId:
-                  type: string
-                  format: uuid
+                  type: integer
               required: [boardId, userId]
       responses:
         '200':
@@ -298,8 +290,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '200':
           description: Данные конкретной задачи.
@@ -322,8 +313,7 @@ paths:
                     type: object
                     properties:
                       id: 
-                        type: string
-                        format: uuid
+                        type: integer
                       name: 
                         type: string
                 required: [task, author]
@@ -357,9 +347,10 @@ paths:
                   type: string
                 discription:
                   type: string
+                assignie:
+                  type: integer
                 linkedBoard:
-                  type: string
-                  format: uuid
+                  type: integer
               required: [title]
       responses:
         '201':
@@ -394,8 +385,7 @@ paths:
               type: object
               properties:
                 taskId:
-                  type: string
-                  format: uuid
+                  type: integer
                 title:
                   type: string
                 discription:
@@ -404,11 +394,9 @@ paths:
                   type: string
                   enum: [in_progress, done, dropped]
                 assignie:
-                  type: string
-                  format: uuid
+                  type: integer
                 linkedBoard:
-                  type: string
-                  format: uuid
+                  type: integer
               required: [taskId]
       responses:
         '200':
@@ -443,8 +431,7 @@ paths:
               type: object
               properties:
                 taskId:
-                  type: string
-                  format: uuid
+                  type: integer
                 text: 
                   type: string
               required: [taskId, text]
@@ -500,8 +487,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '200':
             description: Данные конкретного дашборда.
@@ -584,8 +570,7 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
                 title:
                   type: string
                 discription:
@@ -624,8 +609,7 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
       responses:
         '200':
             description: Удаление успешно.
