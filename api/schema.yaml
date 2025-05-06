@@ -393,9 +393,9 @@ paths:
                 status:
                   type: string
                   enum: [in_progress, done, dropped]
-                assignie:
+                assignie_id:
                   type: integer
-                linkedBoard:
+                linkedBoard_id:
                   type: integer
               required: [taskId]
       responses:
