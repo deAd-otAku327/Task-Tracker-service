@@ -1,11 +1,7 @@
 package dto
 
-import (
-	"time"
-)
-
 type UserResponse struct {
-	ID       int32  `json:"id"`
+	ID       int    `json:"id"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
@@ -13,13 +9,13 @@ type UserResponse struct {
 type GetUsersResponse []*UserResponse
 
 type TaskResponse struct {
-	ID          int32     `json:"id"`
-	Title       string    `json:"title"`
-	Discription *string   `json:"discription,omitempty"`
-	Status      string    `json:"status"`
-	Assignie    *bool     `json:"assignie,omitempty"`
-	Board       *bool     `json:"board,omitempty"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          int     `json:"id"`
+	Title       string  `json:"title"`
+	Discription *string `json:"discription,omitempty"`
+	Status      string  `json:"status"`
+	Assignie    *bool   `json:"assignie,omitempty"`
+	Board       *bool   `json:"board,omitempty"`
+	UpdatedAt   string  `json:"updated_at"`
 }
 
 type GetTasksResponse []*TaskResponse
@@ -29,24 +25,26 @@ type GetTaskByIDResponse struct {
 	Comments    []*CommentResponse `json:"comments,omitempty"`
 	Author      *UserResponse      `json:"author"`
 	Assignie    *UserResponse      `json:"assignie,omitempty"`
-	LinkedBoard struct {
-		ID   string `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
-	} `json:"linkedBoard"`
+	LinkedBoard *BoardData         `json:"linkedBoard"`
+}
+
+type BoardData struct {
+	ID    int    `json:"id,omitempty"`
+	Title string `json:"title,omitempty"`
 }
 
 type CommentResponse struct {
-	ID         string    `json:"id,omitempty"`
-	AuthorName string    `json:"author"`
-	Text       string    `json:"text"`
-	DateTime   time.Time `json:"dateTime"`
+	ID         int    `json:"id,omitempty"`
+	AuthorName string `json:"author"`
+	Text       string `json:"text"`
+	DateTime   string `json:"dateTime"`
 }
 
 type DashboardResponse struct {
-	ID          string    `json:"id"`
-	Title       string    `json:"title"`
-	Discription string    `json:"discription"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          int     `json:"id"`
+	Title       string  `json:"title"`
+	Discription *string `json:"discription,omitempty"`
+	UpdatedAt   string  `json:"updated_at"`
 }
 
 type GetDashboardsResponse []*DashboardResponse
@@ -57,7 +55,7 @@ type GetDashboardByIDResponse struct {
 	Admins    []*UserResponse    `json:"admin"`
 }
 
-type Error struct {
+type ErrorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
