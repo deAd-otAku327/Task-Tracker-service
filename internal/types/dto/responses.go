@@ -55,6 +55,8 @@ type GetDashboardByIDResponse struct {
 	Admins    []*UserResponse    `json:"admin"`
 }
 
+type Token string
+
 type ErrorResponse struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
