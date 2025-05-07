@@ -21,12 +21,14 @@ type Tokenizer interface {
 type tokenizer struct {
 	tokenIssuer string
 	secretKey   []byte
+	tokenExpire time.Duration
 }
 
-func New(iss, key string) Tokenizer {
+func New(iss, key string, expire time.Duration) Tokenizer {
 	return &tokenizer{
 		tokenIssuer: iss,
 		secretKey:   []byte(key),
+		tokenExpire: expire,
 	}
 }
 
@@ -34,7 +36,7 @@ func (t *tokenizer) GenerateToken(userID string) (*string, error) {
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": userID,
 		"iss": t.tokenIssuer,
-		"exp": time.Now().Add(time.Hour * 24).Unix(),
+		"exp": time.Now().Add(t.tokenExpire).Unix(),
 		"iat": time.Now().Unix(),
 	})
 
