@@ -14,7 +14,6 @@ import (
 	"task-tracker-service/internal/tokenizer"
 	"task-tracker-service/pkg/cryptor"
 	"task-tracker-service/pkg/logger"
-	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -41,7 +40,9 @@ func New(cfg *config.Config) (*App, error) {
 
 	service := service.New(storage, logger, cryptor, tokenizer)
 
-	controller := controller.New(service, logger)
+	controller := controller.New(service, logger, &controller.HandlersConfig{
+		AuthExpire: cfg.AuthExpire,
+	})
 	middleware := middleware.New(tokenizer, logger, middleware.MwParams{
 		RpsLimit:      cfg.RPS,
 		RespTimeLimit: cfg.ResponseTime,
@@ -50,7 +51,7 @@ func New(cfg *config.Config) (*App, error) {
 	return &App{
 		Server: &http.Server{
 			Addr:    fmt.Sprintf("%s:%s", cfg.Server.Host, cfg.Server.Port),
-			Handler: configureRouter(controller, middleware, cfg.AuthExpire),
+			Handler: configureRouter(controller, middleware),
 		},
 	}, nil
 }
@@ -64,14 +65,14 @@ func (s *App) Shutdown() error {
 	return s.Server.Shutdown(context.Background())
 }
 
-func configureRouter(controller controller.Controller, middleware middleware.Middleware, authExpire time.Duration) *mux.Router {
+func configureRouter(controller controller.Controller, middleware middleware.Middleware) *mux.Router {
 	router := mux.NewRouter()
 	router.Use(middleware.RpsLimit())
 	router.Use(middleware.Logging())
 	router.Use(middleware.ResponseTimeLimit())
 
 	router.HandleFunc("/register", controller.Register()).Methods(http.MethodPost)
-	router.HandleFunc("/login", controller.Login(authExpire)).Methods(http.MethodPost)
+	router.HandleFunc("/login", controller.Login()).Methods(http.MethodPost)
 
 	protected := router.PathPrefix("").Subrouter()
 	protected.Use(middleware.Auth())

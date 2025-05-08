@@ -16,21 +16,30 @@ import (
 
 type UserHandler interface {
 	Register() http.HandlerFunc
-	Login(authExpire time.Duration) http.HandlerFunc
+	Login() http.HandlerFunc
 	GetUsers() http.HandlerFunc
 	AddBoardAdmin() http.HandlerFunc
 	DeleteBoardAdmin() http.HandlerFunc
 }
 
+type configParams struct {
+	authExpireParam time.Duration
+}
+
 type userHandler struct {
+	params configParams
+
 	service service.Service
 	logger  *slog.Logger
 }
 
-func New(s service.Service, logger *slog.Logger) UserHandler {
+func New(s service.Service, logger *slog.Logger, authExpire time.Duration) UserHandler {
 	return &userHandler{
 		service: s,
 		logger:  logger,
+		params: configParams{
+			authExpireParam: authExpire,
+		},
 	}
 }
 
@@ -53,7 +62,7 @@ func (h *userHandler) Register() http.HandlerFunc {
 	}
 }
 
-func (h *userHandler) Login(authExpire time.Duration) http.HandlerFunc {
+func (h *userHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		request := dto.PostUsersLoginRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
@@ -71,7 +80,7 @@ func (h *userHandler) Login(authExpire time.Duration) http.HandlerFunc {
 		http.SetCookie(w, &http.Cookie{
 			Name:     middleware.CookieName,
 			Value:    string(*response),
-			Expires:  time.Now().Add(authExpire),
+			Expires:  time.Now().Add(h.params.authExpireParam),
 			SameSite: http.SameSiteStrictMode,
 		})
 

@@ -18,6 +18,10 @@ type Controller interface {
 	dashboard.DashboardHandler
 }
 
+type HandlersConfig struct {
+	AuthExpire time.Duration
+}
+
 type controller struct {
 	userHandler      user.UserHandler
 	taskHandler      task.TaskHandler
@@ -25,9 +29,9 @@ type controller struct {
 	dashboardHandler dashboard.DashboardHandler
 }
 
-func New(s service.Service, logger *slog.Logger) Controller {
+func New(s service.Service, logger *slog.Logger, params *HandlersConfig) Controller {
 	return &controller{
-		userHandler:      user.New(s, logger),
+		userHandler:      user.New(s, logger, params.AuthExpire),
 		taskHandler:      task.New(s, logger),
 		commentHandler:   comment.New(s, logger),
 		dashboardHandler: dashboard.New(s, logger),
@@ -38,8 +42,8 @@ func (c *controller) Register() http.HandlerFunc {
 	return c.userHandler.Register()
 }
 
-func (c *controller) Login(authExpire time.Duration) http.HandlerFunc {
-	return c.userHandler.Login(authExpire)
+func (c *controller) Login() http.HandlerFunc {
+	return c.userHandler.Login()
 }
 
 func (c *controller) GetUsers() http.HandlerFunc {
