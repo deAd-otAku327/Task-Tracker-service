@@ -1,11 +1,19 @@
 package dashboard
 
 import (
+	"context"
 	"log/slog"
 	"task-tracker-service/internal/storage/db"
+	"task-tracker-service/internal/types/dto"
+	"task-tracker-service/internal/types/models"
 )
 
 type DashboardService interface {
+	GetDashboards(ctx context.Context) (*dto.GetDashboardsResponse, *dto.ErrorResponse)
+	GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse)
+	CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
+	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
+	DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse
 }
 
 type dashboardService struct {
@@ -18,4 +26,25 @@ func New(s db.DB, logger *slog.Logger) DashboardService {
 		storage: s,
 		logger:  logger,
 	}
+}
+
+func (s *dashboardService) GetDashboards(ctx context.Context) (*dto.GetDashboardsResponse, *dto.ErrorResponse) {
+	return nil, nil
+}
+
+func (s *dashboardService) GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel,
+) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse) {
+	return nil, nil
+}
+
+func (s *dashboardService) CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse) {
+	return nil, nil
+}
+
+func (s *dashboardService) UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse) {
+	return nil, nil
+}
+
+func (s *dashboardService) DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse {
+	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"task-tracker-service/internal/controller/task"
 	"task-tracker-service/internal/controller/user"
 	"task-tracker-service/internal/service"
+	"time"
 )
 
 type Controller interface {
@@ -37,8 +38,8 @@ func (c *controller) Register() http.HandlerFunc {
 	return c.userHandler.Register()
 }
 
-func (c *controller) Login() http.HandlerFunc {
-	return c.userHandler.Login()
+func (c *controller) Login(authExpire time.Duration) http.HandlerFunc {
+	return c.userHandler.Login(authExpire)
 }
 
 func (c *controller) GetUsers() http.HandlerFunc {
