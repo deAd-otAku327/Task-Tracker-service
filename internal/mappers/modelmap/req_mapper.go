@@ -15,17 +15,19 @@ func MapToUser(request *models.UserRegisterModel) *entities.User {
 	}
 }
 
-func MapToBoardAdmin(request *models.UserBoardAdminModel) *entities.UserBoardAdmin {
-	return &entities.UserBoardAdmin{
-		BoardID: request.BoardID,
-		UserID:  request.UserID,
+func MapToUserBoardAdminAction(request *models.UserBoardAdminActionModel) *entities.UserBoardAdminAction {
+	return &entities.UserBoardAdminAction{
+		BoardID:     request.BoardID,
+		UserID:      request.UserID,
+		InitiatorID: request.InitiatorID,
 	}
 }
 
 func MapToTaskFilter(request *models.TaskFilterModel) *entities.TaskFilter {
 	return &entities.TaskFilter{
-		Relation: request.Relation,
-		Status:   request.Status,
+		Status:     request.Status,
+		CreatorID:  request.CreatorID,
+		AssignieID: request.AssignieID,
 	}
 }
 
@@ -64,6 +66,7 @@ func MapToTaskUpdate(request *models.TaskUpdateModel) *entities.TaskUpdate {
 		Discription: request.Discription,
 		AssignieID:  request.AssignieID,
 		BoardID:     request.LinkedBoardID,
+		InitiatorID: request.InitiatorID,
 	}
 }
 
@@ -78,7 +81,8 @@ func MapToComment(request *models.CommentCreateModel) *entities.Comment {
 func MapToDashboard(request *models.DashboardCreateModel) *entities.Dashboard {
 	return &entities.Dashboard{
 		// ID ommited cause of unregistred entity.
-		Title: request.Title,
+		Title:     request.Title,
+		CreatorID: request.CreatorID,
 		Discription: func() sql.NullString {
 			if request.Discription != nil {
 				return sql.NullString{String: *request.Discription}
@@ -93,5 +97,13 @@ func MapToDashboardUpdate(request *models.DashboardUpdateModel) *entities.Dashbo
 		ID:          request.ID,
 		Title:       request.Title,
 		Discription: request.Discription,
+		InitiatorID: request.InitiatorID,
+	}
+}
+
+func MapToDashboardDelete(request *models.DashboardDeleteModel) *entities.DashboardDelete {
+	return &entities.DashboardDelete{
+		BoardID:     request.BoardID,
+		InitiatorID: request.InitiatorID,
 	}
 }

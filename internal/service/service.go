@@ -49,11 +49,11 @@ func (s *service) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.Err
 	return s.userService.GetUsers(ctx)
 }
 
-func (s *service) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse) {
+func (s *service) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
 	return s.userService.AddBoardAdmin(ctx, request)
 }
 
-func (s *service) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse) {
+func (s *service) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
 	return s.userService.DeleteBoardAdmin(ctx, request)
 }
 

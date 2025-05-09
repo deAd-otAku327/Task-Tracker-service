@@ -11,14 +11,19 @@ type UserRegisterModel struct {
 	Password string
 }
 
-type UserBoardAdminModel struct {
+type UserBoardAdminActionModel struct {
 	BoardID int
 	UserID  int
+
+	InitiatorID int
 }
 
 type TaskFilterModel struct {
 	Relation string
 	Status   []string
+
+	CreatorID  *int
+	AssignieID *int
 }
 
 type TaskIDParamModel struct {
@@ -40,6 +45,8 @@ type TaskUpdateModel struct {
 	Discription   *string
 	AssignieID    *int
 	LinkedBoardID *int
+
+	InitiatorID int
 }
 
 type CommentCreateModel struct {
@@ -55,14 +62,20 @@ type DashboardIDParamModel struct {
 type DashboardCreateModel struct {
 	Title       string
 	Discription *string
+
+	CreatorID int
 }
 
 type DashboardUpdateModel struct {
 	ID          int
 	Title       *string
 	Discription *string
+
+	InitiatorID int
 }
 
 type DashboardDeleteModel struct {
 	BoardID int
+
+	InitiatorID int
 }

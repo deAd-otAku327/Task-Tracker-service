@@ -46,10 +46,10 @@ func (s *userService) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto
 	return nil, nil
 }
 
-func (s *userService) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse) {
+func (s *userService) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
 	return nil, nil
 }
 
-func (s *userService) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse) {
+func (s *userService) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
 	return nil, nil
 }

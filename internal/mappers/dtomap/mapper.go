@@ -20,8 +20,8 @@ func MapToUserRegisterModel(request *dto.PostUsersRegisterRequest) *models.UserR
 	}
 }
 
-func MapToUserBoardAdminModel(request *dto.PostUsersBoardAdminRequest) *models.UserBoardAdminModel {
-	return &models.UserBoardAdminModel{
+func MapToUserBoardAdminModel(request *dto.PostUsersBoardAdminRequest) *models.UserBoardAdminActionModel {
+	return &models.UserBoardAdminActionModel{
 		BoardID: request.BoardID,
 		UserID:  request.UserID,
 	}
