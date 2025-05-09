@@ -1,11 +1,19 @@
 package task
 
 import (
+	"context"
 	"database/sql"
 	"log/slog"
+	"task-tracker-service/internal/types/entities"
+	"task-tracker-service/internal/types/models"
 )
 
 type TaskDB interface {
+	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error)
+	GetTaskByID(ctx context.Context, taskID int) (*models.TaskModel, []*models.CommentModel, *models.UserModel,
+		*models.UserModel, *models.DashboardModel, error)
+	CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error)
+	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error)
 }
 
 type taskStorage struct {
@@ -18,4 +26,21 @@ func New(db *sql.DB, logger *slog.Logger) TaskDB {
 		db:     db,
 		logger: logger,
 	}
+}
+
+func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error) {
+	return nil, nil
+}
+
+func (s *taskStorage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskModel, []*models.CommentModel, *models.UserModel,
+	*models.UserModel, *models.DashboardModel, error) {
+	return nil, nil, nil, nil, nil, nil
+}
+
+func (s *taskStorage) CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error) {
+	return nil, nil
+}
+
+func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error) {
+	return nil, nil
 }
