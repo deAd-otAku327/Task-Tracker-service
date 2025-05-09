@@ -20,11 +20,18 @@ type TaskModel struct {
 }
 
 type CommentModel struct {
-	ID         int
-	AuthorID   int
-	AuthorName string
-	Text       string
-	DateTime   time.Time
+	ID       int
+	AuthorID int
+	Text     string
+	DateTime time.Time
+}
+
+type TaskSummaryModel struct {
+	Task        *TaskModel
+	Comments    []*CommentModel
+	Author      *UserModel
+	Assignie    *UserModel
+	LinkedBoard *DashboardModel
 }
 
 type DashboardModel struct {
@@ -32,4 +39,10 @@ type DashboardModel struct {
 	Title       string
 	Discription *string
 	UpdatedAt   time.Time
+}
+
+type DashboardSummaryModel struct {
+	Dashboard *DashboardModel
+	Tasks     []*TaskModel
+	Admins    []*UserModel
 }

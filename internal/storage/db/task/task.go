@@ -10,8 +10,7 @@ import (
 
 type TaskDB interface {
 	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error)
-	GetTaskByID(ctx context.Context, taskID int) (*models.TaskModel, []*models.CommentModel, *models.UserModel,
-		*models.UserModel, *models.DashboardModel, error)
+	GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error)
 	CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error)
 	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error)
 }
@@ -32,9 +31,8 @@ func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.T
 	return nil, nil
 }
 
-func (s *taskStorage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskModel, []*models.CommentModel, *models.UserModel,
-	*models.UserModel, *models.DashboardModel, error) {
-	return nil, nil, nil, nil, nil, nil
+func (s *taskStorage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error) {
+	return nil, nil
 }
 
 func (s *taskStorage) CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error) {

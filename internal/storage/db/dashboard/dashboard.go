@@ -10,7 +10,7 @@ import (
 
 type DashboardDB interface {
 	GetDashboardsForAdminID(ctx context.Context, userID int) ([]*models.DashboardModel, error)
-	GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardModel, []*models.TaskModel, []*models.UserModel, error)
+	GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error)
 	CreateDashboard(ctx context.Context, dashboard *entities.Dashboard) (*models.DashboardModel, error)
 	UpdateDashboard(ctx context.Context, dashboardUpdate *entities.DashboardUpdate) (*models.DashboardModel, error)
 	DeleteDashboard(ctx context.Context, dashboardDelete *entities.DashboardDelete) error
@@ -32,8 +32,8 @@ func (s *dashboardStorage) GetDashboardsForAdminID(ctx context.Context, userID i
 	return nil, nil
 }
 
-func (s *dashboardStorage) GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardModel, []*models.TaskModel, []*models.UserModel, error) {
-	return nil, nil, nil, nil
+func (s *dashboardStorage) GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error) {
+	return nil, nil
 }
 
 func (s *dashboardStorage) CreateDashboard(ctx context.Context, dashboard *entities.Dashboard) (*models.DashboardModel, error) {

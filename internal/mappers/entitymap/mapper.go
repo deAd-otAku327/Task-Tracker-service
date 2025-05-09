@@ -43,13 +43,30 @@ func MapToTaskModel(response *entities.Task) *models.TaskModel {
 	}
 }
 
-func MapToCommentModel(response *entities.Comment, authorName string) *models.CommentModel {
+func MapToCommentModel(response *entities.Comment) *models.CommentModel {
 	return &models.CommentModel{
-		ID:         response.ID,
-		AuthorID:   response.AuthorID,
-		AuthorName: authorName,
-		Text:       response.Text,
-		DateTime:   response.DateTime,
+		ID:       response.ID,
+		AuthorID: response.AuthorID,
+		Text:     response.Text,
+		DateTime: response.DateTime,
+	}
+}
+
+func MapToTaskSummaryModel(respTask *entities.Task, respComms []*entities.Comment,
+	respAuthor, respAssignie *entities.User, respBoard *entities.Dashboard) *models.TaskSummaryModel {
+
+	return &models.TaskSummaryModel{
+		Task: MapToTaskModel(respTask),
+		Comments: func() []*models.CommentModel {
+			res := make([]*models.CommentModel, 0, len(respComms))
+			for _, entity := range respComms {
+				res = append(res, MapToCommentModel(entity))
+			}
+			return res
+		}(),
+		Author:      MapToUserModel(respAuthor),
+		Assignie:    MapToUserModel(respAssignie),
+		LinkedBoard: MapToDashboardModel(respBoard),
 	}
 }
 
@@ -64,5 +81,27 @@ func MapToDashboardModel(response *entities.Dashboard) *models.DashboardModel {
 			return nil
 		}(),
 		UpdatedAt: response.UpdatedAt,
+	}
+}
+
+func MapToDashboardSummaryModel(respBoard *entities.Dashboard, respTasks []*entities.Task,
+	respAdmins []*entities.User) *models.DashboardSummaryModel {
+
+	return &models.DashboardSummaryModel{
+		Dashboard: MapToDashboardModel(respBoard),
+		Tasks: func() []*models.TaskModel {
+			res := make([]*models.TaskModel, 0, len(respTasks))
+			for _, entity := range respTasks {
+				res = append(res, MapToTaskModel(entity))
+			}
+			return res
+		}(),
+		Admins: func() []*models.UserModel {
+			res := make([]*models.UserModel, 0, len(respAdmins))
+			for _, entity := range respAdmins {
+				res = append(res, MapToUserModel(entity))
+			}
+			return res
+		}(),
 	}
 }

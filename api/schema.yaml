@@ -61,14 +61,14 @@ components:
       properties:
         id:
           type: integer
-        author:
-          type: string
+        authorId:
+          type: int
         text:
           type: string
         dateTime:
           type: string
           format: date-time
-      required: [author, text, dateTime]
+      required: [authorId, text, dateTime]
 
     Error:
       type: object

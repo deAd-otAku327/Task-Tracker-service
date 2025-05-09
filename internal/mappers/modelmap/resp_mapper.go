@@ -78,10 +78,10 @@ func MapToGetTaskByIDResponse(respTask *models.TaskModel, respComments []*models
 
 func MapToCommentResponse(response *models.CommentModel) *dto.CommentResponse {
 	return &dto.CommentResponse{
-		ID:         response.ID,
-		AuthorName: response.AuthorName,
-		Text:       response.Text,
-		DateTime:   response.DateTime.Format(DateTimeFormat),
+		ID:       response.ID,
+		AuthorID: response.AuthorID,
+		Text:     response.Text,
+		DateTime: response.DateTime.Format(DateTimeFormat),
 	}
 }
 

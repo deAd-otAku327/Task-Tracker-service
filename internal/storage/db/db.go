@@ -75,8 +75,7 @@ func (s *storage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskF
 	return s.taskStorage.GetTasksWithFilter(ctx, filter)
 }
 
-func (s *storage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskModel, []*models.CommentModel, *models.UserModel,
-	*models.UserModel, *models.DashboardModel, error) {
+func (s *storage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error) {
 	return s.taskStorage.GetTaskByID(ctx, taskID)
 }
 
@@ -96,7 +95,7 @@ func (s *storage) GetDashboardsForAdminID(ctx context.Context, userID int) ([]*m
 	return s.dashboardStorage.GetDashboardsForAdminID(ctx, userID)
 }
 
-func (s *storage) GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardModel, []*models.TaskModel, []*models.UserModel, error) {
+func (s *storage) GetDashboardByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error) {
 	return s.dashboardStorage.GetDashboardByID(ctx, boardID)
 }
 

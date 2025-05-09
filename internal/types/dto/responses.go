@@ -34,10 +34,10 @@ type BoardData struct {
 }
 
 type CommentResponse struct {
-	ID         int    `json:"id,omitempty"`
-	AuthorName string `json:"author"`
-	Text       string `json:"text"`
-	DateTime   string `json:"dateTime"`
+	ID       int    `json:"id,omitempty"`
+	AuthorID int    `json:"authorId"`
+	Text     string `json:"text"`
+	DateTime string `json:"dateTime"`
 }
 
 type DashboardResponse struct {
