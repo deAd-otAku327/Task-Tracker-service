@@ -32,7 +32,7 @@ type TaskIDParamModel struct {
 
 type TaskCreateModel struct {
 	Title         string
-	Discription   *string
+	Description   *string
 	AuthorID      int
 	AssignieID    *int
 	LinkedBoardID *int
@@ -42,7 +42,7 @@ type TaskUpdateModel struct {
 	ID            int
 	Title         *string
 	Status        *string
-	Discription   *string
+	Description   *string
 	AssignieID    *int
 	LinkedBoardID *int
 
@@ -61,7 +61,7 @@ type DashboardIDParamModel struct {
 
 type DashboardCreateModel struct {
 	Title       string
-	Discription *string
+	Description *string
 
 	CreatorID int
 }
@@ -69,7 +69,7 @@ type DashboardCreateModel struct {
 type DashboardUpdateModel struct {
 	ID          int
 	Title       *string
-	Discription *string
+	Description *string
 
 	InitiatorID int
 }

@@ -18,9 +18,9 @@ func MapToTaskModel(response *entities.Task) *models.TaskModel {
 	return &models.TaskModel{
 		ID:    response.ID,
 		Title: response.Title,
-		Discription: func() *string {
-			if response.Discription.Valid {
-				return &response.Discription.String
+		Description: func() *string {
+			if response.Description.Valid {
+				return &response.Description.String
 			}
 			return nil
 		}(),
@@ -74,9 +74,9 @@ func MapToDashboardModel(response *entities.Dashboard) *models.DashboardModel {
 	return &models.DashboardModel{
 		ID:    response.ID,
 		Title: response.Title,
-		Discription: func() *string {
-			if response.Discription.Valid {
-				return &response.Discription.String
+		Description: func() *string {
+			if response.Description.Valid {
+				return &response.Description.String
 			}
 			return nil
 		}(),

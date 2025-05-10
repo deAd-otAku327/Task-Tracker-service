@@ -18,7 +18,7 @@ type TaskUpdate struct {
 	ID          int
 	Title       *string
 	Status      *string
-	Discription *string
+	Description *string
 	AssignieID  *int
 	BoardID     *int
 
@@ -28,7 +28,7 @@ type TaskUpdate struct {
 type DashboardUpdate struct {
 	ID          int
 	Title       *string
-	Discription *string
+	Description *string
 
 	InitiatorID int
 }

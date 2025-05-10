@@ -11,7 +11,7 @@ type GetUsersResponse []*UserResponse
 type TaskResponse struct {
 	ID          int     `json:"id"`
 	Title       string  `json:"title"`
-	Discription *string `json:"discription,omitempty"`
+	Description *string `json:"discription,omitempty"`
 	Status      string  `json:"status"`
 	Assignie    *bool   `json:"assignie,omitempty"`
 	Board       *bool   `json:"board,omitempty"`
@@ -43,7 +43,7 @@ type CommentResponse struct {
 type DashboardResponse struct {
 	ID          int     `json:"id"`
 	Title       string  `json:"title"`
-	Discription *string `json:"discription,omitempty"`
+	Description *string `json:"discription,omitempty"`
 	UpdatedAt   string  `json:"updated_at"`
 }
 

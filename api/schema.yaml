@@ -28,7 +28,7 @@ components:
           type: integer
         title:
           type: string
-        discription:
+        description:
           type: string
         status:
           type: string
@@ -49,12 +49,12 @@ components:
           type: integer
         title:
           type: string
-        discription:
+        description:
           type: string
         updated_at:
           type: string
           format: date-time
-      required: [id, title, discription, updated_at]  
+      required: [id, title, description, updated_at]  
 
     Comment:
       type: object
@@ -345,7 +345,7 @@ paths:
               properties:
                 title:
                   type: string
-                discription:
+                description:
                   type: string
                 assignie_id:
                   type: integer
@@ -388,7 +388,7 @@ paths:
                   type: integer
                 title:
                   type: string
-                discription:
+                description:
                   type: string
                 status:
                   type: string
@@ -534,7 +534,7 @@ paths:
               properties:
                 title:
                   type: string
-                discription:
+                description:
                   type: string
               required: [title]
       responses:
@@ -573,7 +573,7 @@ paths:
                   type: integer
                 title:
                   type: string
-                discription:
+                description:
                   type: string
               required: [boardID]
       responses:

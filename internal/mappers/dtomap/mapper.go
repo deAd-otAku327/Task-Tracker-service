@@ -43,7 +43,7 @@ func MapToTaskIDParamModel(request *dto.GetTaskByIDParam) *models.TaskIDParamMod
 func MapToTaskCreateModel(request *dto.PostTasksCreateRequest) *models.TaskCreateModel {
 	return &models.TaskCreateModel{
 		Title:         request.Title,
-		Discription:   request.Discription,
+		Description:   request.Description,
 		AssignieID:    request.AssignieID,
 		LinkedBoardID: request.LinkedBoardID,
 	}
@@ -54,7 +54,7 @@ func MapToTaskUpdateModel(request *dto.PostTasksUpdateRequest) *models.TaskUpdat
 		ID:            request.TaskID,
 		Title:         request.Title,
 		Status:        request.Status,
-		Discription:   request.Discription,
+		Description:   request.Description,
 		AssignieID:    request.AssignieID,
 		LinkedBoardID: request.LinkedBoardID,
 	}
@@ -76,7 +76,7 @@ func MapToDashboardIDParamModel(request *dto.GetDashboardByIDParam) *models.Dash
 func MapToDashboardCreateModel(request *dto.PostDashboardsCreateRequest) *models.DashboardCreateModel {
 	return &models.DashboardCreateModel{
 		Title:       request.Title,
-		Discription: request.Discription,
+		Description: request.Description,
 	}
 }
 

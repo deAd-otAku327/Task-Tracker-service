@@ -12,7 +12,7 @@ type UserModel struct {
 type TaskModel struct {
 	ID          int
 	Title       string
-	Discription *string
+	Description *string
 	Status      string
 	AssignieID  *int
 	BoardID     *int
@@ -37,7 +37,7 @@ type TaskSummaryModel struct {
 type DashboardModel struct {
 	ID          int
 	Title       string
-	Discription *string
+	Description *string
 	UpdatedAt   time.Time
 }
 

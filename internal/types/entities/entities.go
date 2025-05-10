@@ -15,7 +15,7 @@ type User struct {
 type Task struct {
 	ID          int
 	Title       string
-	Discription sql.NullString
+	Description sql.NullString
 	Status      string
 	AuthorID    int
 	AssignieID  sql.NullInt32
@@ -34,6 +34,6 @@ type Dashboard struct {
 	ID          int
 	Title       string
 	CreatorID   int
-	Discription sql.NullString
+	Description sql.NullString
 	UpdatedAt   time.Time
 }

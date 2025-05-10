@@ -28,7 +28,7 @@ type GetTaskByIDParam struct {
 
 type PostTasksCreateRequest struct {
 	Title         string  `json:"title"`
-	Discription   *string `json:"discription,omitempty"`
+	Description   *string `json:"discription,omitempty"`
 	AssignieID    *int    `json:"assignie_id,omitempty"`
 	LinkedBoardID *int    `json:"linkedBoard_id,omitempty"`
 }
@@ -37,7 +37,7 @@ type PostTasksUpdateRequest struct {
 	TaskID        int     `json:"taskId"`
 	Title         *string `json:"title,omitempty"`
 	Status        *string `json:"status,omitempty"`
-	Discription   *string `json:"discription,omitempty"`
+	Description   *string `json:"discription,omitempty"`
 	AssignieID    *int    `json:"assignie_id,omitempty"`
 	LinkedBoardID *int    `json:"linkedBoard_id,omitempty"`
 }
@@ -53,13 +53,13 @@ type GetDashboardByIDParam struct {
 
 type PostDashboardsCreateRequest struct {
 	Title       string  `json:"title"`
-	Discription *string `json:"discription,omitempty"`
+	Description *string `json:"discription,omitempty"`
 }
 
 type PostDashboardsUpdateRequest struct {
 	BoardID     int     `json:"boardId"`
 	Title       *string `json:"title,omitempty"`
-	Discription *string `json:"discription,omitempty"`
+	Description *string `json:"discription,omitempty"`
 }
 
 type PostDashboardsDeleteRequest struct {

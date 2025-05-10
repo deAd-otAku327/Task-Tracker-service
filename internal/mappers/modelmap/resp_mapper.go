@@ -27,7 +27,7 @@ func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
 	return &dto.TaskResponse{
 		ID:          response.ID,
 		Title:       response.Title,
-		Discription: response.Discription,
+		Description: response.Description,
 		Status:      response.Status,
 		Assignie: func() *bool {
 			if response.AssignieID != nil {
@@ -89,7 +89,7 @@ func MapToDashboardResponse(response *models.DashboardModel) *dto.DashboardRespo
 	return &dto.DashboardResponse{
 		ID:          response.ID,
 		Title:       response.Title,
-		Discription: response.Discription,
+		Description: response.Description,
 		UpdatedAt:   response.UpdatedAt.Format(DateTimeFormat),
 	}
 }

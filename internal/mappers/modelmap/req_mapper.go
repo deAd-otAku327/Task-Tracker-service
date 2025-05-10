@@ -36,9 +36,9 @@ func MapToTask(request *models.TaskCreateModel) *entities.Task {
 		// ID ommited cause of unregistred entity.
 		// Status ommited cause of db defaults and dependencies reducing.
 		Title: request.Title,
-		Discription: func() sql.NullString {
-			if request.Discription != nil {
-				return sql.NullString{String: *request.Discription}
+		Description: func() sql.NullString {
+			if request.Description != nil {
+				return sql.NullString{String: *request.Description}
 			}
 			return sql.NullString{Valid: false}
 		}(),
@@ -63,7 +63,7 @@ func MapToTaskUpdate(request *models.TaskUpdateModel) *entities.TaskUpdate {
 		ID:          request.ID,
 		Title:       request.Title,
 		Status:      request.Status,
-		Discription: request.Discription,
+		Description: request.Description,
 		AssignieID:  request.AssignieID,
 		BoardID:     request.LinkedBoardID,
 		InitiatorID: request.InitiatorID,
@@ -83,9 +83,9 @@ func MapToDashboard(request *models.DashboardCreateModel) *entities.Dashboard {
 		// ID ommited cause of unregistred entity.
 		Title:     request.Title,
 		CreatorID: request.CreatorID,
-		Discription: func() sql.NullString {
-			if request.Discription != nil {
-				return sql.NullString{String: *request.Discription}
+		Description: func() sql.NullString {
+			if request.Description != nil {
+				return sql.NullString{String: *request.Description}
 			}
 			return sql.NullString{Valid: false}
 		}(),
@@ -96,7 +96,7 @@ func MapToDashboardUpdate(request *models.DashboardUpdateModel) *entities.Dashbo
 	return &entities.DashboardUpdate{
 		ID:          request.ID,
 		Title:       request.Title,
-		Discription: request.Discription,
+		Description: request.Description,
 		InitiatorID: request.InitiatorID,
 	}
 }
