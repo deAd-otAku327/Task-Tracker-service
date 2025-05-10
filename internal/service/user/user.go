@@ -14,8 +14,8 @@ type UserService interface {
 	RegistrateUser(ctx context.Context, request *models.UserRegisterModel) (*dto.UserResponse, *dto.ErrorResponse)
 	LoginUser(ctx context.Context, request *models.UserLoginModel) (*dto.Token, *dto.ErrorResponse)
 	GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse)
-	AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse)
-	DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminModel) (*dto.UserResponse, *dto.ErrorResponse)
+	AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse)
+	DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse)
 }
 
 type userService struct {
