@@ -14,6 +14,8 @@ type DashboardDB interface {
 	CreateDashboard(ctx context.Context, dashboard *entities.Dashboard) (*models.DashboardModel, error)
 	UpdateDashboard(ctx context.Context, dashboardUpdate *entities.DashboardUpdate) (*models.DashboardModel, error)
 	DeleteDashboard(ctx context.Context, dashboardDelete *entities.DashboardDelete) error
+	AddBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error
+	DeleteBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error
 }
 
 type dashboardStorage struct {
@@ -45,5 +47,13 @@ func (s *dashboardStorage) UpdateDashboard(ctx context.Context, dashboardUpdate 
 }
 
 func (s *dashboardStorage) DeleteDashboard(ctx context.Context, dashboardDelete *entities.DashboardDelete) error {
+	return nil
+}
+
+func (s *dashboardStorage) AddBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
+	return nil
+}
+
+func (s *dashboardStorage) DeleteBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
 	return nil
 }

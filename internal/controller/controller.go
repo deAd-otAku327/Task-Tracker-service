@@ -50,14 +50,6 @@ func (c *controller) GetUsers() http.HandlerFunc {
 	return c.userHandler.GetUsers()
 }
 
-func (c *controller) AddBoardAdmin() http.HandlerFunc {
-	return c.userHandler.AddBoardAdmin()
-}
-
-func (c *controller) DeleteBoardAdmin() http.HandlerFunc {
-	return c.userHandler.DeleteBoardAdmin()
-}
-
 func (c *controller) GetTasks() http.HandlerFunc {
 	return c.taskHandler.GetTasks()
 }
@@ -96,4 +88,12 @@ func (c *controller) UpdateDashboard() http.HandlerFunc {
 
 func (c *controller) DeleteDashboard() http.HandlerFunc {
 	return c.dashboardHandler.DeleteDashboard()
+}
+
+func (c *controller) AddBoardAdmin() http.HandlerFunc {
+	return c.dashboardHandler.AddBoardAdmin()
+}
+
+func (c *controller) DeleteBoardAdmin() http.HandlerFunc {
+	return c.dashboardHandler.DeleteBoardAdmin()
 }

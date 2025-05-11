@@ -20,13 +20,6 @@ func MapToUserRegisterModel(request *dto.PostUsersRegisterRequest) *models.UserR
 	}
 }
 
-func MapToUserBoardAdminModel(request *dto.PostUsersBoardAdminRequest) *models.UserBoardAdminActionModel {
-	return &models.UserBoardAdminActionModel{
-		BoardID: request.BoardID,
-		UserID:  request.UserID,
-	}
-}
-
 func MapToTaskFilterModel(request *dto.GetTasksParams) *models.TaskFilterModel {
 	return &models.TaskFilterModel{
 		Relation: request.Relation,
@@ -90,5 +83,12 @@ func MapToDashboardUpdateModel(request *dto.PostDashboardsUpdateRequest) *models
 func MapToDashboardDeleteModel(request *dto.PostDashboardsDeleteRequest) *models.DashboardDeleteModel {
 	return &models.DashboardDeleteModel{
 		BoardID: request.BoardID,
+	}
+}
+
+func MapToDashboardAdminActionModel(request *dto.PostDashboardsAdminRequest) *models.DashboardAdminActionModel {
+	return &models.DashboardAdminActionModel{
+		BoardID: request.BoardID,
+		UserID:  request.UserID,
 	}
 }

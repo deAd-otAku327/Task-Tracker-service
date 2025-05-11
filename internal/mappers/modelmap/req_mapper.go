@@ -15,14 +15,6 @@ func MapToUser(request *models.UserRegisterModel) *entities.User {
 	}
 }
 
-func MapToUserBoardAdminAction(request *models.UserBoardAdminActionModel) *entities.UserBoardAdminAction {
-	return &entities.UserBoardAdminAction{
-		BoardID:     request.BoardID,
-		UserID:      request.UserID,
-		InitiatorID: request.InitiatorID,
-	}
-}
-
 func MapToTaskFilter(request *models.TaskFilterModel) *entities.TaskFilter {
 	return &entities.TaskFilter{
 		Status:     request.Status,
@@ -104,6 +96,14 @@ func MapToDashboardUpdate(request *models.DashboardUpdateModel) *entities.Dashbo
 func MapToDashboardDelete(request *models.DashboardDeleteModel) *entities.DashboardDelete {
 	return &entities.DashboardDelete{
 		BoardID:     request.BoardID,
+		InitiatorID: request.InitiatorID,
+	}
+}
+
+func MapToDashboardAdminAction(request *models.DashboardAdminActionModel) *entities.DashboardAdminAction {
+	return &entities.DashboardAdminAction{
+		BoardID:     request.BoardID,
+		UserID:      request.UserID,
 		InitiatorID: request.InitiatorID,
 	}
 }

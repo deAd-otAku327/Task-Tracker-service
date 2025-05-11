@@ -49,14 +49,6 @@ func (s *service) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.Err
 	return s.userService.GetUsers(ctx)
 }
 
-func (s *service) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
-	return s.userService.AddBoardAdmin(ctx, request)
-}
-
-func (s *service) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
-	return s.userService.DeleteBoardAdmin(ctx, request)
-}
-
 func (s *service) GetTasks(ctx context.Context, request *models.TaskFilterModel) (*dto.GetTasksResponse, *dto.ErrorResponse) {
 	return s.taskService.GetTasks(ctx, request)
 }
@@ -96,4 +88,12 @@ func (s *service) UpdateDashboard(ctx context.Context, request *models.Dashboard
 
 func (s *service) DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse {
 	return s.dashboardService.DeleteDashboard(ctx, request)
+}
+
+func (s *service) AddBoardAdmin(ctx context.Context, request *models.DashboardAdminActionModel) *dto.ErrorResponse {
+	return s.dashboardService.AddBoardAdmin(ctx, request)
+}
+
+func (s *service) DeleteBoardAdmin(ctx context.Context, request *models.DashboardAdminActionModel) *dto.ErrorResponse {
+	return s.dashboardService.DeleteBoardAdmin(ctx, request)
 }

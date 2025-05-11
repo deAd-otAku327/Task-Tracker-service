@@ -11,13 +11,6 @@ type UserRegisterModel struct {
 	Password string
 }
 
-type UserBoardAdminActionModel struct {
-	BoardID int
-	UserID  int
-
-	InitiatorID int
-}
-
 type TaskFilterModel struct {
 	Relation string
 	Status   []string
@@ -76,6 +69,13 @@ type DashboardUpdateModel struct {
 
 type DashboardDeleteModel struct {
 	BoardID int
+
+	InitiatorID int
+}
+
+type DashboardAdminActionModel struct {
+	BoardID int
+	UserID  int
 
 	InitiatorID int
 }

@@ -1,12 +1,5 @@
 package entities
 
-type UserBoardAdminAction struct {
-	BoardID int
-	UserID  int
-
-	InitiatorID int
-}
-
 type TaskFilter struct {
 	Status []string
 
@@ -35,6 +28,13 @@ type DashboardUpdate struct {
 
 type DashboardDelete struct {
 	BoardID int
+
+	InitiatorID int
+}
+
+type DashboardAdminAction struct {
+	BoardID int
+	UserID  int
 
 	InitiatorID int
 }

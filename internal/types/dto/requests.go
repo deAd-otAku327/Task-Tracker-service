@@ -11,11 +11,6 @@ type PostUsersRegisterRequest struct {
 	Password string `json:"password"`
 }
 
-type PostUsersBoardAdminRequest struct {
-	BoardID int `json:"boardId"`
-	UserID  int `json:"userId"`
-}
-
 // Defaults are from internal/enum.
 type GetTasksParams struct {
 	Relation string   `schema:"relation,omitempty,default:assigned_to_me"`
@@ -64,4 +59,9 @@ type PostDashboardsUpdateRequest struct {
 
 type PostDashboardsDeleteRequest struct {
 	BoardID int `json:"boardId"`
+}
+
+type PostDashboardsAdminRequest struct {
+	BoardID int `json:"boardId"`
+	UserID  int `json:"userId"`
 }

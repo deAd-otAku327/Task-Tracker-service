@@ -22,6 +22,8 @@ type DashboardHandler interface {
 	CreateDashboard() http.HandlerFunc
 	UpdateDashboard() http.HandlerFunc
 	DeleteDashboard() http.HandlerFunc
+	AddBoardAdmin() http.HandlerFunc
+	DeleteBoardAdmin() http.HandlerFunc
 }
 
 type dashboardHandler struct {
@@ -118,6 +120,44 @@ func (h *dashboardHandler) DeleteDashboard() http.HandlerFunc {
 		}
 
 		servErr := h.service.DeleteDashboard(r.Context(), dtomap.MapToDashboardDeleteModel(&request))
+		if servErr != nil {
+			responser.MakeErrorResponseJSON(w, servErr)
+			return
+		}
+
+		responser.MakeResponseJSON(w, http.StatusOK, nil)
+	}
+}
+
+func (h *dashboardHandler) AddBoardAdmin() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		request := dto.PostDashboardsAdminRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			return
+		}
+
+		servErr := h.service.AddBoardAdmin(r.Context(), dtomap.MapToDashboardAdminActionModel(&request))
+		if servErr != nil {
+			responser.MakeErrorResponseJSON(w, servErr)
+			return
+		}
+
+		responser.MakeResponseJSON(w, http.StatusOK, nil)
+	}
+}
+
+func (h *dashboardHandler) DeleteBoardAdmin() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		request := dto.PostDashboardsAdminRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			return
+		}
+
+		servErr := h.service.DeleteBoardAdmin(r.Context(), dtomap.MapToDashboardAdminActionModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return

@@ -12,8 +12,6 @@ type UserDB interface {
 	CreateUser(ctx context.Context, createUser *entities.User) (*models.UserModel, error)
 	GetUserByUsername(ctx context.Context, username string) (*models.UserModel, error)
 	GetUsers(ctx context.Context) ([]*models.UserModel, error)
-	AddBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) (*models.UserModel, error)
-	DeleteBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) error
 }
 
 type userStorage struct {
@@ -38,12 +36,4 @@ func (s *userStorage) GetUserByUsername(ctx context.Context, username string) (*
 
 func (s *userStorage) GetUsers(ctx context.Context) ([]*models.UserModel, error) {
 	return nil, nil
-}
-
-func (s *userStorage) AddBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) (*models.UserModel, error) {
-	return nil, nil
-}
-
-func (s *userStorage) DeleteBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) error {
-	return nil
 }

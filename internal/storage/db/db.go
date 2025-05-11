@@ -63,14 +63,6 @@ func (s *storage) GetUsers(ctx context.Context) ([]*models.UserModel, error) {
 	return s.userStorage.GetUsers(ctx)
 }
 
-func (s *storage) AddBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) (*models.UserModel, error) {
-	return s.userStorage.AddBoardAdminUser(ctx, boardAdminAction)
-}
-
-func (s *storage) DeleteBoardAdminUser(ctx context.Context, boardAdminAction *entities.UserBoardAdminAction) error {
-	return s.userStorage.DeleteBoardAdminUser(ctx, boardAdminAction)
-}
-
 func (s *storage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error) {
 	return s.taskStorage.GetTasksWithFilter(ctx, filter)
 }
@@ -109,4 +101,12 @@ func (s *storage) UpdateDashboard(ctx context.Context, dashboardUpdate *entities
 
 func (s *storage) DeleteDashboard(ctx context.Context, dashboardDelete *entities.DashboardDelete) error {
 	return s.dashboardStorage.DeleteDashboard(ctx, dashboardDelete)
+}
+
+func (s *storage) AddBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
+	return s.dashboardStorage.AddBoardAdmin(ctx, boardAdminAction)
+}
+
+func (s *storage) DeleteBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
+	return s.dashboardStorage.DeleteBoardAdmin(ctx, boardAdminAction)
 }

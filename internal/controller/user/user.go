@@ -18,8 +18,6 @@ type UserHandler interface {
 	Register() http.HandlerFunc
 	Login() http.HandlerFunc
 	GetUsers() http.HandlerFunc
-	AddBoardAdmin() http.HandlerFunc
-	DeleteBoardAdmin() http.HandlerFunc
 }
 
 type configParams struct {
@@ -91,44 +89,6 @@ func (h *userHandler) Login() http.HandlerFunc {
 func (h *userHandler) GetUsers() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		response, servErr := h.service.GetUsers(r.Context())
-		if servErr != nil {
-			responser.MakeErrorResponseJSON(w, servErr)
-			return
-		}
-
-		responser.MakeResponseJSON(w, http.StatusOK, &response)
-	}
-}
-
-func (h *userHandler) AddBoardAdmin() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		request := dto.PostUsersBoardAdminRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
-			return
-		}
-
-		response, servErr := h.service.AddBoardAdmin(r.Context(), dtomap.MapToUserBoardAdminModel(&request))
-		if servErr != nil {
-			responser.MakeErrorResponseJSON(w, servErr)
-			return
-		}
-
-		responser.MakeResponseJSON(w, http.StatusOK, &response)
-	}
-}
-
-func (h *userHandler) DeleteBoardAdmin() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		request := dto.PostUsersBoardAdminRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
-			return
-		}
-
-		response, servErr := h.service.DeleteBoardAdmin(r.Context(), dtomap.MapToUserBoardAdminModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return

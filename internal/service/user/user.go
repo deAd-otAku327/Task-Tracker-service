@@ -14,8 +14,6 @@ type UserService interface {
 	RegistrateUser(ctx context.Context, request *models.UserRegisterModel) (*dto.UserResponse, *dto.ErrorResponse)
 	LoginUser(ctx context.Context, request *models.UserLoginModel) (*dto.Token, *dto.ErrorResponse)
 	GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse)
-	AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse)
-	DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse)
 }
 
 type userService struct {
@@ -43,13 +41,5 @@ func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginMo
 }
 
 func (s *userService) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse) {
-	return nil, nil
-}
-
-func (s *userService) AddBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
-	return nil, nil
-}
-
-func (s *userService) DeleteBoardAdmin(ctx context.Context, request *models.UserBoardAdminActionModel) (*dto.UserResponse, *dto.ErrorResponse) {
 	return nil, nil
 }

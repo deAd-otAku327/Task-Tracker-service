@@ -167,77 +167,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-
-  /users/addBoardAdmin:
-    post: 
-      summary: Добавление админа дашборда.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                boardId:
-                  type: integer
-                userId:
-                  type: integer
-              required: [boardId, userId]
-      responses:
-        '200':
-            description: Добавление успешно.
-            content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Неверный запрос.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Доступ запрещен.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'      
-
-
-  /users/deleteBoardAdmin:
-    post:   
-      summary: Удаление админа дашборда.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                boardId:
-                  type: integer
-                userId:
-                  type: integer
-              required: [boardId, userId]
-      responses:
-        '200':
-            description: Удаление успешно.
-        '400':
-          description: Неверный запрос.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Доступ запрещен.
-          content:
-            application/json:
-              schema:
                 $ref: '#/components/schemas/Error'  
 
   /tasks:
@@ -625,3 +554,70 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+/dashboards/addBoardAdmin:
+    post: 
+      summary: Добавление админа дашборда.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                boardId:
+                  type: integer
+                userId:
+                  type: integer
+              required: [boardId, userId]
+      responses:
+        '200':
+            description: Добавление успешно.
+        '400':
+          description: Неверный запрос.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Доступ запрещен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'      
+
+
+/dashboards/deleteBoardAdmin:
+  post:   
+    summary: Удаление админа дашборда.
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              boardId:
+                type: integer
+              userId:
+                type: integer
+            required: [boardId, userId]
+    responses:
+      '200':
+          description: Удаление успешно.
+      '400':
+        description: Неверный запрос.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
+      '403':
+        description: Доступ запрещен.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
