@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"log/slog"
 	"task-tracker-service/internal/config"
-	"task-tracker-service/internal/storage/db/_shared/consts"
+	"task-tracker-service/internal/storage/db/_shared/dbconsts"
 	"task-tracker-service/internal/storage/db/comment"
 	"task-tracker-service/internal/storage/db/dashboard"
 	"task-tracker-service/internal/storage/db/task"
@@ -31,7 +31,7 @@ type storage struct {
 }
 
 func New(cfg config.DBConn, logger *slog.Logger) (DB, error) {
-	database, err := sql.Open(consts.PGDriverName, cfg.URL)
+	database, err := sql.Open(dbconsts.PGDriverName, cfg.URL)
 	if err != nil {
 		return nil, err
 	}

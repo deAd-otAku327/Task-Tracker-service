@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"log/slog"
 	"net/http"
-	"task-tracker-service/internal/controller/_shared/cerrors"
+	"task-tracker-service/internal/controller/_shared/apierrors"
 	"task-tracker-service/internal/controller/_shared/responser"
 	"task-tracker-service/internal/mappers/dtomap"
 	"task-tracker-service/internal/mappers/errmap"
@@ -33,7 +33,7 @@ func (h *commentHandler) Comment() http.HandlerFunc {
 		request := dto.PostCommentRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 

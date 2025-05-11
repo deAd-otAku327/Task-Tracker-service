@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"task-tracker-service/internal/controller/_shared/cerrors"
-	"task-tracker-service/internal/controller/_shared/consts"
+	"task-tracker-service/internal/controller/_shared/apiconsts"
+	"task-tracker-service/internal/controller/_shared/apierrors"
 	"task-tracker-service/internal/controller/_shared/responser"
 	"task-tracker-service/internal/mappers/dtomap"
 	"task-tracker-service/internal/mappers/errmap"
@@ -53,9 +53,9 @@ func (h *dashboardHandler) GetDashboards() http.HandlerFunc {
 func (h *dashboardHandler) GetDashboardByID() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// No check for empty map cause of path-param cannot be missing.
-		param, err := strconv.Atoi(mux.Vars(r)[consts.URLParamDashboardID])
+		param, err := strconv.Atoi(mux.Vars(r)[apiconsts.URLParamDashboardID])
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
 			return
 		}
 		request := dto.GetDashboardByIDParam{
@@ -77,7 +77,7 @@ func (h *dashboardHandler) CreateDashboard() http.HandlerFunc {
 		request := dto.PostDashboardsCreateRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
@@ -96,7 +96,7 @@ func (h *dashboardHandler) UpdateDashboard() http.HandlerFunc {
 		request := dto.PostDashboardsUpdateRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
@@ -115,7 +115,7 @@ func (h *dashboardHandler) DeleteDashboard() http.HandlerFunc {
 		request := dto.PostDashboardsDeleteRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
@@ -134,7 +134,7 @@ func (h *dashboardHandler) AddBoardAdmin() http.HandlerFunc {
 		request := dto.PostDashboardsAdminRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
@@ -153,7 +153,7 @@ func (h *dashboardHandler) DeleteBoardAdmin() http.HandlerFunc {
 		request := dto.PostDashboardsAdminRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 

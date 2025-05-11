@@ -1,4 +1,4 @@
-package consts
+package dbconsts
 
 const (
 	PGDriverName = "postgres"

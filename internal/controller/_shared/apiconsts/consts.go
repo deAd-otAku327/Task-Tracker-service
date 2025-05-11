@@ -1,4 +1,4 @@
-package consts
+package apiconsts
 
 const (
 	URLParamTaskID      = "taskId"

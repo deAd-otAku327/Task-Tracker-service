@@ -1,4 +1,4 @@
-package cerrors
+package apierrors
 
 import "errors"
 

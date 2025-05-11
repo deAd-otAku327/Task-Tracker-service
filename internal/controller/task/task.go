@@ -5,8 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
-	"task-tracker-service/internal/controller/_shared/cerrors"
-	"task-tracker-service/internal/controller/_shared/consts"
+	"task-tracker-service/internal/controller/_shared/apiconsts"
+	"task-tracker-service/internal/controller/_shared/apierrors"
 	"task-tracker-service/internal/controller/_shared/responser"
 	"task-tracker-service/internal/mappers/dtomap"
 	"task-tracker-service/internal/mappers/errmap"
@@ -40,14 +40,14 @@ func (h *taskHandler) GetTasks() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := r.ParseForm()
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestParams, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParams, http.StatusBadRequest))
 			return
 		}
 
 		request := dto.GetTasksParams{}
 		err = schema.NewDecoder().Decode(&request, r.Form)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
 			return
 		}
 
@@ -64,9 +64,9 @@ func (h *taskHandler) GetTasks() http.HandlerFunc {
 func (h *taskHandler) GetTaskByID() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// No check for empty map cause of path-param cannot be missing.
-		param, err := strconv.Atoi(mux.Vars(r)[consts.URLParamTaskID])
+		param, err := strconv.Atoi(mux.Vars(r)[apiconsts.URLParamTaskID])
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
 			return
 		}
 		request := dto.GetTaskByIDParam{
@@ -88,7 +88,7 @@ func (h *taskHandler) CreateTask() http.HandlerFunc {
 		request := dto.PostTasksCreateRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
@@ -107,7 +107,7 @@ func (h *taskHandler) UpdateTask() http.HandlerFunc {
 		request := dto.PostTasksUpdateRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
-			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(cerrors.ErrInvalidRequestBody, http.StatusBadRequest))
+			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestBody, http.StatusBadRequest))
 			return
 		}
 
