@@ -15,8 +15,8 @@ type TaskFilterModel struct {
 	Relation string
 	Status   []string
 
-	CreatorID  *int
-	AssignieID *int
+	CreatorID  *int // Service calculation.
+	AssignieID *int // Service calculation.
 }
 
 type TaskIDParamModel struct {
@@ -26,7 +26,7 @@ type TaskIDParamModel struct {
 type TaskCreateModel struct {
 	Title         string
 	Description   *string
-	AuthorID      int
+	AuthorID      int // Service calculation.
 	AssignieID    *int
 	LinkedBoardID *int
 }
@@ -39,12 +39,12 @@ type TaskUpdateModel struct {
 	AssignieID    *int
 	LinkedBoardID *int
 
-	InitiatorID int
+	InitiatorID int // Service calculation.
 }
 
 type CommentCreateModel struct {
 	TaskID   int
-	AuthorID int
+	AuthorID int // Service calculation.
 	Text     string
 }
 
@@ -56,7 +56,7 @@ type DashboardCreateModel struct {
 	Title       string
 	Description *string
 
-	CreatorID int
+	CreatorID int // Service calculation.
 }
 
 type DashboardUpdateModel struct {
@@ -64,18 +64,18 @@ type DashboardUpdateModel struct {
 	Title       *string
 	Description *string
 
-	InitiatorID int
+	InitiatorID int // Service calculation.
 }
 
 type DashboardDeleteModel struct {
 	BoardID int
 
-	InitiatorID int
+	InitiatorID int // Service calculation.
 }
 
 type DashboardAdminActionModel struct {
 	BoardID int
 	UserID  int
 
-	InitiatorID int
+	InitiatorID int // Service calculation.
 }
