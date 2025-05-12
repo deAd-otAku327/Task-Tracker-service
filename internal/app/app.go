@@ -78,8 +78,6 @@ func configureRouter(controller controller.Controller, middleware middleware.Mid
 	protected.Use(middleware.Auth())
 
 	protected.HandleFunc("/users", controller.GetUsers()).Methods(http.MethodGet)
-	protected.HandleFunc("/users/addBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
-	protected.HandleFunc("/users/deleteBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
 
 	protected.HandleFunc("/tasks", controller.GetTasks()).Methods(http.MethodGet)
 	protected.HandleFunc("/tasks/{taskId:[1-9][0-9]*}", controller.GetTaskByID()).Methods(http.MethodGet)
@@ -93,6 +91,8 @@ func configureRouter(controller controller.Controller, middleware middleware.Mid
 	protected.HandleFunc("/dashboards/create", controller.CreateDashboard()).Methods(http.MethodPost)
 	protected.HandleFunc("/dashboards/update", controller.UpdateDashboard()).Methods(http.MethodPost)
 	protected.HandleFunc("/dashboards/delete", controller.DeleteDashboard()).Methods(http.MethodPost)
+	protected.HandleFunc("/dashboards/addBoardAdmin", controller.AddBoardAdmin()).Methods(http.MethodPost)
+	protected.HandleFunc("/dashboards/deleteBoardAdmin", controller.DeleteBoardAdmin()).Methods(http.MethodPost)
 
 	return router
 }
