@@ -3,6 +3,11 @@ package user
 import (
 	"context"
 	"log/slog"
+	"net/http"
+	"strconv"
+	"task-tracker-service/internal/mappers/errmap"
+	"task-tracker-service/internal/mappers/modelmap"
+	"task-tracker-service/internal/service/_shared/serverrors"
 	"task-tracker-service/internal/storage/db"
 	"task-tracker-service/internal/tokenizer"
 	"task-tracker-service/internal/types/dto"
@@ -33,13 +38,54 @@ func New(s db.DB, logger *slog.Logger, cryptor cryptor.Cryptor, tok tokenizer.To
 }
 
 func (s *userService) RegistrateUser(ctx context.Context, request *models.UserRegisterModel) (*dto.UserResponse, *dto.ErrorResponse) {
-	return nil, nil
+	err := request.Validate()
+	if err != nil {
+		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
+	}
+
+	hash, err := s.cryptor.EncryptKeyword(request.HashedPassword)
+	if err != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+	}
+
+	request.HashedPassword = hash
+
+	response, dberror := s.storage.CreateUser(ctx, modelmap.MapToUser(request))
+	if dberror != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+	}
+
+	return modelmap.MapToUserResponse(response), nil
 }
 
 func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginModel) (*dto.Token, *dto.ErrorResponse) {
-	return nil, nil
+	err := request.Validate()
+	if err != nil {
+		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
+	}
+
+	response, dberror := s.storage.GetUserByUsername(ctx, request.Username)
+	if dberror != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+	}
+
+	if err = s.cryptor.CompareHashAndPassword(response.HashedPassword, request.Password); err != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrInvalidPassword, http.StatusUnauthorized)
+	}
+
+	token, err := s.tokenizer.GenerateToken(strconv.Itoa(response.ID))
+	if err != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+	}
+
+	return (*dto.Token)(token), nil
 }
 
 func (s *userService) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse) {
-	return nil, nil
+	response, dberror := s.storage.GetUsers(ctx)
+	if dberror != nil {
+		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+	}
+
+	return modelmap.MapToGetUsersResponse(response), nil
 }

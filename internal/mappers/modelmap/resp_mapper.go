@@ -55,23 +55,21 @@ func MapToGetTaskResponse(response []*models.TaskModel) *dto.GetTasksResponse {
 	return &res
 }
 
-func MapToGetTaskByIDResponse(respTask *models.TaskModel, respComments []*models.CommentModel,
-	respAuthor, respAssignie *models.UserModel, respDashboard *models.DashboardModel,
-) *dto.GetTaskByIDResponse {
+func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskByIDResponse {
 	return &dto.GetTaskByIDResponse{
-		Task: MapToTaskResponse(respTask),
+		Task: MapToTaskResponse(response.Task),
 		Comments: func() []*dto.CommentResponse {
-			res := make([]*dto.CommentResponse, 0, len(respComments))
-			for _, model := range respComments {
+			res := make([]*dto.CommentResponse, 0, len(response.Comments))
+			for _, model := range response.Comments {
 				res = append(res, MapToCommentResponse(model))
 			}
 			return res
 		}(),
-		Author:   MapToUserResponse(respAuthor),
-		Assignie: MapToUserResponse(respAssignie),
+		Author:   MapToUserResponse(response.Author),
+		Assignie: MapToUserResponse(response.Assignie),
 		LinkedBoard: &dto.BoardData{
-			ID:    respDashboard.ID,
-			Title: respDashboard.Title,
+			ID:    response.LinkedBoard.ID,
+			Title: response.LinkedBoard.Title,
 		},
 	}
 }
@@ -102,20 +100,19 @@ func MapToGetDashboardsResponse(response []*models.DashboardModel) *dto.GetDashb
 	return &res
 }
 
-func MapToGetDashboardByIDResponse(respDashboard *models.DashboardModel, respTasks []*models.TaskModel, respAdmins []*models.UserModel,
-) *dto.GetDashboardByIDResponse {
+func MapToGetDashboardByIDResponse(response *models.DashboardSummaryModel) *dto.GetDashboardByIDResponse {
 	return &dto.GetDashboardByIDResponse{
-		Dashboard: MapToDashboardResponse(respDashboard),
+		Dashboard: MapToDashboardResponse(response.Dashboard),
 		Tasks: func() []*dto.TaskResponse {
-			res := make([]*dto.TaskResponse, 0, len(respTasks))
-			for _, model := range respTasks {
+			res := make([]*dto.TaskResponse, 0, len(response.Tasks))
+			for _, model := range response.Tasks {
 				res = append(res, MapToTaskResponse(model))
 			}
 			return res
 		}(),
 		Admins: func() []*dto.UserResponse {
-			res := make([]*dto.UserResponse, 0, len(respAdmins))
-			for _, model := range respAdmins {
+			res := make([]*dto.UserResponse, 0, len(response.Admins))
+			for _, model := range response.Admins {
 				res = append(res, MapToUserResponse(model))
 			}
 			return res

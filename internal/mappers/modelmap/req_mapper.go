@@ -11,7 +11,7 @@ func MapToUser(request *models.UserRegisterModel) *entities.User {
 		// ID ommited cause of unregistred entity.
 		Username: request.Username,
 		Email:    request.Email,
-		Password: request.Password,
+		Password: request.HashedPassword,
 	}
 }
 

@@ -19,4 +19,7 @@ var (
 	ErrIDInvalid       = errors.New("provided id is invalid")
 	ErrTitleFieldEmpty = errors.New("required non-empty 'title' is empty")
 	ErrTextFieldEmpty  = errors.New("required non-empty 'text' is empty")
+
+	ErrSomethingWentWrong = errors.New("sorry, something went wrong")
+	ErrInvalidPassword    = errors.New("password is invalid")
 )

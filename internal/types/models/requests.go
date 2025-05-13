@@ -6,9 +6,10 @@ type UserLoginModel struct {
 }
 
 type UserRegisterModel struct {
-	Email    string
-	Username string
-	Password string
+	Email          string
+	Username       string
+	Password       string
+	HashedPassword string // Service calculation.
 }
 
 type TaskFilterModel struct {
