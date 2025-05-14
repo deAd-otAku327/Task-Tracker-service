@@ -74,7 +74,7 @@ func configureRouter(controller controller.Controller, middleware middleware.Mid
 	router.HandleFunc("/register", controller.Register()).Methods(http.MethodPost)
 	router.HandleFunc("/login", controller.Login()).Methods(http.MethodPost)
 
-	protected := router.PathPrefix("").Subrouter()
+	protected := router.NewRoute().Subrouter()
 	protected.Use(middleware.Auth())
 
 	protected.HandleFunc("/users", controller.GetUsers()).Methods(http.MethodGet)
