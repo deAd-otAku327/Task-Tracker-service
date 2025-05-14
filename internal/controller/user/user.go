@@ -82,7 +82,7 @@ func (h *userHandler) Login() http.HandlerFunc {
 			SameSite: http.SameSiteStrictMode,
 		})
 
-		responser.MakeResponseJSON(w, http.StatusOK, &response)
+		responser.MakeResponseJSON(w, http.StatusOK, nil)
 	}
 }
 
