@@ -5,7 +5,7 @@ import (
 )
 
 type Cryptor interface {
-	EncryptKeyword(pass string) (string, error)
+	EncryptPassword(pass string) (string, error)
 	CompareHashAndPassword(hash, password string) error
 }
 
@@ -19,7 +19,7 @@ func New(asyncHashingLimit int) Cryptor {
 	}
 }
 
-func (c cryptor) EncryptKeyword(pass string) (string, error) {
+func (c cryptor) EncryptPassword(pass string) (string, error) {
 	resChan := make(chan string, 1)
 	errChan := make(chan error, 1)
 

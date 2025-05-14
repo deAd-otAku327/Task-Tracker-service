@@ -43,7 +43,7 @@ func (s *userService) RegistrateUser(ctx context.Context, request *models.UserRe
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
-	hash, err := s.cryptor.EncryptKeyword(request.HashedPassword)
+	hash, err := s.cryptor.EncryptPassword(request.Password)
 	if err != nil {
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
