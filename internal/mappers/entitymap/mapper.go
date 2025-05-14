@@ -14,6 +14,15 @@ func MapToUserModel(response *entities.User) *models.UserModel {
 	}
 }
 
+func MapToUserListModel(response []*entities.User) models.UserListModel {
+	result := make(models.UserListModel, 0, len(response))
+	for _, u := range response {
+		result = append(result, MapToUserModel(u))
+	}
+
+	return result
+}
+
 func MapToTaskModel(response *entities.Task) *models.TaskModel {
 	return &models.TaskModel{
 		ID:    response.ID,
@@ -41,6 +50,15 @@ func MapToTaskModel(response *entities.Task) *models.TaskModel {
 		}(),
 		UpdatedAt: response.UpdatedAt,
 	}
+}
+
+func MapToTaskListModel(response []*entities.Task) models.TaskListModel {
+	result := make(models.TaskListModel, 0, len(response))
+	for _, t := range response {
+		result = append(result, MapToTaskModel(t))
+	}
+
+	return result
 }
 
 func MapToCommentModel(response *entities.Comment) *models.CommentModel {
@@ -82,6 +100,15 @@ func MapToDashboardModel(response *entities.Dashboard) *models.DashboardModel {
 		}(),
 		UpdatedAt: response.UpdatedAt,
 	}
+}
+
+func MapToDashboardListModel(response []*entities.Dashboard) models.DashboardListModel {
+	result := make(models.DashboardListModel, 0, len(response))
+	for _, d := range response {
+		result = append(result, MapToDashboardModel(d))
+	}
+
+	return result
 }
 
 func MapToDashboardSummaryModel(respBoard *entities.Dashboard, respTasks []*entities.Task,

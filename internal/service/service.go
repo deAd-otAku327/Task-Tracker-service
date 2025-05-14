@@ -45,11 +45,11 @@ func (s *service) LoginUser(ctx context.Context, request *models.UserLoginModel)
 	return s.userService.LoginUser(ctx, request)
 }
 
-func (s *service) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse) {
+func (s *service) GetUsers(ctx context.Context) (dto.GetUsersResponse, *dto.ErrorResponse) {
 	return s.userService.GetUsers(ctx)
 }
 
-func (s *service) GetTasks(ctx context.Context, request *models.TaskFilterModel) (*dto.GetTasksResponse, *dto.ErrorResponse) {
+func (s *service) GetTasks(ctx context.Context, request *models.TaskFilterModel) (dto.GetTasksResponse, *dto.ErrorResponse) {
 	return s.taskService.GetTasks(ctx, request)
 }
 
@@ -69,7 +69,7 @@ func (s *service) CreateComment(ctx context.Context, request *models.CommentCrea
 	return s.commentService.CreateComment(ctx, request)
 }
 
-func (s *service) GetDashboards(ctx context.Context) (*dto.GetDashboardsResponse, *dto.ErrorResponse) {
+func (s *service) GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse) {
 	return s.dashboardService.GetDashboards(ctx)
 }
 

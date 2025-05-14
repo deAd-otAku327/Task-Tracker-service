@@ -9,6 +9,8 @@ type UserModel struct {
 	HashedPassword string
 }
 
+type UserListModel []*UserModel
+
 type TaskModel struct {
 	ID          int
 	Title       string
@@ -18,6 +20,8 @@ type TaskModel struct {
 	BoardID     *int
 	UpdatedAt   time.Time
 }
+
+type TaskListModel []*TaskModel
 
 type CommentModel struct {
 	ID       int
@@ -40,6 +44,8 @@ type DashboardModel struct {
 	Description *string
 	UpdatedAt   time.Time
 }
+
+type DashboardListModel []*DashboardModel
 
 type DashboardSummaryModel struct {
 	Dashboard *DashboardModel

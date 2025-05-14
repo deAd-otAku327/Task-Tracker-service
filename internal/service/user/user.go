@@ -18,7 +18,7 @@ import (
 type UserService interface {
 	RegistrateUser(ctx context.Context, request *models.UserRegisterModel) (*dto.UserResponse, *dto.ErrorResponse)
 	LoginUser(ctx context.Context, request *models.UserLoginModel) (*dto.Token, *dto.ErrorResponse)
-	GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse)
+	GetUsers(ctx context.Context) (dto.GetUsersResponse, *dto.ErrorResponse)
 }
 
 type userService struct {
@@ -81,7 +81,7 @@ func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginMo
 	return (*dto.Token)(token), nil
 }
 
-func (s *userService) GetUsers(ctx context.Context) (*dto.GetUsersResponse, *dto.ErrorResponse) {
+func (s *userService) GetUsers(ctx context.Context) (dto.GetUsersResponse, *dto.ErrorResponse) {
 	response, dberror := s.storage.GetUsers(ctx)
 	if dberror != nil {
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)

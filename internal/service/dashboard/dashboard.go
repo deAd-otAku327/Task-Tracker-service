@@ -14,7 +14,7 @@ import (
 )
 
 type DashboardService interface {
-	GetDashboards(ctx context.Context) (*dto.GetDashboardsResponse, *dto.ErrorResponse)
+	GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse)
 	GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse)
 	CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
 	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
@@ -35,7 +35,7 @@ func New(s db.DB, logger *slog.Logger) DashboardService {
 	}
 }
 
-func (s *dashboardService) GetDashboards(ctx context.Context) (*dto.GetDashboardsResponse, *dto.ErrorResponse) {
+func (s *dashboardService) GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse) {
 	currUserID, ok := ctx.Value(middleware.UserIDKey).(int)
 	if !ok {
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)

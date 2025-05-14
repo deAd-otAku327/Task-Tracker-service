@@ -15,12 +15,12 @@ func MapToUserResponse(response *models.UserModel) *dto.UserResponse {
 	}
 }
 
-func MapToGetUsersResponse(response []*models.UserModel) *dto.GetUsersResponse {
+func MapToGetUsersResponse(response models.UserListModel) dto.GetUsersResponse {
 	res := make(dto.GetUsersResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToUserResponse(model))
 	}
-	return &res
+	return res
 }
 
 func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
@@ -47,12 +47,12 @@ func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
 	}
 }
 
-func MapToGetTaskResponse(response []*models.TaskModel) *dto.GetTasksResponse {
+func MapToGetTaskResponse(response models.TaskListModel) dto.GetTasksResponse {
 	res := make(dto.GetTasksResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToTaskResponse(model))
 	}
-	return &res
+	return res
 }
 
 func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskByIDResponse {
@@ -92,12 +92,12 @@ func MapToDashboardResponse(response *models.DashboardModel) *dto.DashboardRespo
 	}
 }
 
-func MapToGetDashboardsResponse(response []*models.DashboardModel) *dto.GetDashboardsResponse {
+func MapToGetDashboardsResponse(response models.DashboardListModel) dto.GetDashboardsResponse {
 	res := make(dto.GetDashboardsResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToDashboardResponse(model))
 	}
-	return &res
+	return res
 }
 
 func MapToGetDashboardByIDResponse(response *models.DashboardSummaryModel) *dto.GetDashboardByIDResponse {
