@@ -8,5 +8,4 @@ server:
   async_hashing_limit: 10
 
 db-conn:
-  url: postgres://postgres:qwerty123@localhost:5432/task-tracker-db?sslmode=disable
   max_open_conns: 15
