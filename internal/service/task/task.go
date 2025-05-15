@@ -116,6 +116,16 @@ func (s *taskService) UpdateTask(ctx context.Context, request *models.TaskUpdate
 
 	response, dberror := s.storage.UpdateTask(ctx, modelmap.MapToTaskUpdate(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsReturned {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrUpdateImpossible, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskAssignieIDForeignKey] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardDForeignKey] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
+		}
+		s.logger.Error("update task: %s", dberror.Error())
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
