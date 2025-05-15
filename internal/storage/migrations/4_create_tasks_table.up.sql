@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS tasks
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT,
-    status task_status_enum NOT NULL DEFAULT 'in_progress',
+    status task_status_enum NOT NULL DEFAULT 'created',
     author_id INTEGER,
     assignie_id INTEGER,
     board_id INTEGER,
