@@ -65,6 +65,7 @@ func MapToTaskUpdate(request *models.TaskUpdateModel) *entities.TaskUpdate {
 func MapToComment(request *models.CommentCreateModel) *entities.Comment {
 	return &entities.Comment{
 		// ID ommited cause of unregistred entity.
+		TaskID:   request.TaskID,
 		AuthorID: request.AuthorID,
 		Text:     request.Text,
 	}

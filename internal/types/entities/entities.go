@@ -25,6 +25,7 @@ type Task struct {
 
 type Comment struct {
 	ID       int
+	TaskID   int
 	AuthorID int
 	Text     string
 	DateTime time.Time
