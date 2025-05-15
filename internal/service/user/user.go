@@ -9,6 +9,8 @@ import (
 	"task-tracker-service/internal/mappers/modelmap"
 	"task-tracker-service/internal/service/_shared/serverrors"
 	"task-tracker-service/internal/storage/db"
+	"task-tracker-service/internal/storage/db/_shared/dbconsts"
+	"task-tracker-service/internal/storage/db/_shared/dberrors"
 	"task-tracker-service/internal/tokenizer"
 	"task-tracker-service/internal/types/dto"
 	"task-tracker-service/internal/types/models"
@@ -52,6 +54,12 @@ func (s *userService) RegistrateUser(ctx context.Context, request *models.UserRe
 
 	response, dberror := s.storage.CreateUser(ctx, modelmap.MapToUser(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUniqueUsername] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrUsernameOccupied, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUniqueEmail] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrEmailOccupied, http.StatusBadRequest)
+		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
@@ -66,6 +74,9 @@ func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginMo
 
 	response, dberror := s.storage.GetUserByUsername(ctx, request.Username)
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsReturned {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrUsernameIsNotRegistered, http.StatusUnauthorized)
+		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

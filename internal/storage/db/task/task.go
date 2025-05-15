@@ -9,7 +9,7 @@ import (
 )
 
 type TaskDB interface {
-	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error)
+	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error)
 	GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error)
 	CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error)
 	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error)
@@ -27,7 +27,7 @@ func New(db *sql.DB, logger *slog.Logger) TaskDB {
 	}
 }
 
-func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error) {
+func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error) {
 	return nil, nil
 }
 

@@ -59,11 +59,11 @@ func (s *storage) GetUserByUsername(ctx context.Context, username string) (*mode
 	return s.userStorage.GetUserByUsername(ctx, username)
 }
 
-func (s *storage) GetUsers(ctx context.Context) ([]*models.UserModel, error) {
+func (s *storage) GetUsers(ctx context.Context) (models.UserListModel, error) {
 	return s.userStorage.GetUsers(ctx)
 }
 
-func (s *storage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) ([]*models.TaskModel, error) {
+func (s *storage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error) {
 	return s.taskStorage.GetTasksWithFilter(ctx, filter)
 }
 
@@ -83,7 +83,7 @@ func (s *storage) CreateComment(ctx context.Context, comment *entities.Comment) 
 	return s.commentStorage.CreateComment(ctx, comment)
 }
 
-func (s *storage) GetDashboardsForAdminID(ctx context.Context, userID int) ([]*models.DashboardModel, error) {
+func (s *storage) GetDashboardsForAdminID(ctx context.Context, userID int) (models.DashboardListModel, error) {
 	return s.dashboardStorage.GetDashboardsForAdminID(ctx, userID)
 }
 

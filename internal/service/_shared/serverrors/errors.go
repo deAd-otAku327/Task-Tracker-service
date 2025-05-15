@@ -20,6 +20,9 @@ var (
 	ErrTitleFieldEmpty = errors.New("required non-empty 'title' is empty")
 	ErrTextFieldEmpty  = errors.New("required non-empty 'text' is empty")
 
-	ErrSomethingWentWrong = errors.New("sorry, something went wrong")
-	ErrInvalidPassword    = errors.New("password is invalid")
+	ErrSomethingWentWrong      = errors.New("sorry, something went wrong")
+	ErrUsernameIsNotRegistered = errors.New("username is not registered")
+	ErrInvalidPassword         = errors.New("password is invalid")
+	ErrUsernameOccupied        = errors.New("username is already occupied")
+	ErrEmailOccupied           = errors.New("email is already linked to another account")
 )
