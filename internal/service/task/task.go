@@ -57,7 +57,7 @@ func (s *taskService) GetTasks(ctx context.Context, request *models.TaskFilterMo
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
-	return modelmap.MapToGetTaskResponse(response), nil
+	return modelmap.MapToGetTasksResponse(response), nil
 }
 
 func (s *taskService) GetTaskByID(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {

@@ -47,7 +47,7 @@ func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
 	}
 }
 
-func MapToGetTaskResponse(response models.TaskListModel) dto.GetTasksResponse {
+func MapToGetTasksResponse(response models.TaskListModel) dto.GetTasksResponse {
 	res := make(dto.GetTasksResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToTaskResponse(model))
