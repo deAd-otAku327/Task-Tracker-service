@@ -98,6 +98,10 @@ func (m TaskUpdateModel) Validate() error {
 		return fmt.Errorf("%s:%d", serverrors.ErrIDInvalid, m.ID)
 	}
 
+	if m.Title == nil && m.Status == nil && m.Description == nil && m.AssignieID == nil && m.LinkedBoardID == nil {
+		return serverrors.ErrNoFieldsToUpdate
+	}
+
 	if m.Title != nil {
 		if len(*m.Title) == 0 {
 			return serverrors.ErrTitleFieldEmpty
@@ -154,6 +158,10 @@ func (m DashboardCreateModel) Validate() error {
 func (m DashboardUpdateModel) Validate() error {
 	if m.ID < 1 {
 		return fmt.Errorf("%s:%d", serverrors.ErrIDInvalid, m.ID)
+	}
+
+	if m.Title == nil && m.Description == nil {
+		return serverrors.ErrNoFieldsToUpdate
 	}
 
 	if m.Title != nil {

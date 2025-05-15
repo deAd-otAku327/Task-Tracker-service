@@ -20,6 +20,8 @@ var (
 	ErrTitleFieldEmpty = errors.New("required non-empty 'title' is empty")
 	ErrTextFieldEmpty  = errors.New("required non-empty 'text' is empty")
 
+	ErrNoFieldsToUpdate = errors.New("provided no filds for update")
+
 	ErrSomethingWentWrong      = errors.New("sorry, something went wrong")
 	ErrUsernameIsNotRegistered = errors.New("username is not registered")
 	ErrInvalidPassword         = errors.New("password is invalid")
