@@ -30,20 +30,20 @@ func MapToTask(request *models.TaskCreateModel) *entities.Task {
 		Title: request.Title,
 		Description: func() sql.NullString {
 			if request.Description != nil {
-				return sql.NullString{String: *request.Description}
+				return sql.NullString{String: *request.Description, Valid: true}
 			}
 			return sql.NullString{Valid: false}
 		}(),
 		AuthorID: request.AuthorID,
 		AssignieID: func() sql.NullInt32 {
 			if request.AssignieID != nil {
-				return sql.NullInt32{Int32: int32(*request.AssignieID)}
+				return sql.NullInt32{Int32: int32(*request.AssignieID), Valid: true}
 			}
 			return sql.NullInt32{Valid: false}
 		}(),
 		BoardID: func() sql.NullInt32 {
 			if request.LinkedBoardID != nil {
-				return sql.NullInt32{Int32: int32(*request.LinkedBoardID)}
+				return sql.NullInt32{Int32: int32(*request.LinkedBoardID), Valid: true}
 			}
 			return sql.NullInt32{Valid: false}
 		}(),
@@ -77,7 +77,7 @@ func MapToDashboard(request *models.DashboardCreateModel) *entities.Dashboard {
 		CreatorID: request.CreatorID,
 		Description: func() sql.NullString {
 			if request.Description != nil {
-				return sql.NullString{String: *request.Description}
+				return sql.NullString{String: *request.Description, Valid: true}
 			}
 			return sql.NullString{Valid: false}
 		}(),
