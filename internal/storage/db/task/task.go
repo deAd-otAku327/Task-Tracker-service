@@ -3,6 +3,7 @@ package task
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log/slog"
 	"task-tracker-service/internal/mappers/entitymap"
 	"task-tracker-service/internal/storage/db/_shared/dbconsts"
@@ -13,6 +14,7 @@ import (
 	"time"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/lib/pq"
 )
 
 type TaskDB interface {
@@ -35,7 +37,50 @@ func New(db *sql.DB, logger *slog.Logger) TaskDB {
 }
 
 func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error) {
-	return nil, nil
+	query, args, err := sq.Select("*").
+		From(dbconsts.TableTasks).
+		Where(func() sq.Eq {
+			if filter.CreatorID != nil {
+				return sq.Eq{dbconsts.ColumnTaskAuthorID: filter.CreatorID}
+			} else if filter.AssignieID != nil {
+				return sq.Eq{dbconsts.ColumnTaskAssignieID: filter.AssignieID}
+			}
+			return sq.Eq{}
+		}()).
+		// Do not touch without brainstorm. Magic number - number of WHERE statements, current must be last.
+		Where(fmt.Sprintf("%s = ANY($2)", dbconsts.ColumnTaskStatus)).
+		OrderBy(dbconsts.ColumnTaskUpdatedAt).
+		Suffix("DESC").
+		PlaceholderFormat(sq.Dollar).ToSql()
+	args = append(args, pq.Array(filter.Status))
+
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := s.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tasks := make([]*entities.Task, 0)
+
+	for rows.Next() {
+		task := entities.Task{}
+		err := rows.Scan(
+			&task.ID, &task.Title, &task.Description, &task.Status,
+			&task.AuthorID, &task.AssignieID, &task.BoardID, &task.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, &task)
+	}
+	if rows.Err() != nil {
+		return nil, err
+	}
+
+	return entitymap.MapToTaskListModel(tasks), nil
 }
 
 func (s *taskStorage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error) {
