@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"net/http"
+	"strconv"
 	"task-tracker-service/internal/controller/_shared/apierrors"
 	"task-tracker-service/internal/controller/_shared/responser"
 	"task-tracker-service/internal/mappers/errmap"
@@ -31,7 +32,13 @@ func (hub *middlewareHub) Auth() mux.MiddlewareFunc {
 				return
 			}
 
-			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), UserIDKey, userID)))
+			uid, err := strconv.Atoi(userID)
+			if err != nil {
+				responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrAuthenticationFailed, http.StatusForbidden))
+				return
+			}
+
+			next.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), UserIDKey, uid)))
 		})
 	}
 }
