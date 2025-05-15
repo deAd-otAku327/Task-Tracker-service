@@ -1,13 +1,16 @@
 package dbconsts
 
 const (
-	PGDriverName = "postgres"
+	PQDriverName = "postgres"
 	// From http://www.postgresql.org/docs/9.3/static/errcodes-appendix.html
-	PGInvalidTextRepresentationError = "invalid_text_representation"
-	PGUniqueViolationError           = "unique_violation"
+	PQInvalidTextRepresentationError = "invalid_text_representation"
+	PQUniqueViolationError           = "unique_violation"
+	PQForeignKeyViolation            = "foreign_key_violation"
 
-	ConstraintUniqueUsername = "users_username_unique"
-	ConstraintUniqueEmail    = "users_email_unique"
+	ConstraintUserUniqueUsername       = "users_username_unique"
+	ConstraintUserUniqueEmail          = "users_email_unique"
+	ConstraintTaskAssignieIDForeignKey = "tasks_assignie_id_fk"
+	ConstraintTaskBoardDForeignKey     = "tasks_board_id_fk"
 
 	DatatypeEnumTaskStatus = "task_status_enum"
 
@@ -22,5 +25,12 @@ const (
 	ColumnUserEmail    = "email"
 	ColumnUserPassword = "password"
 
-	ColumnTaskStatus = "status"
+	ColumnTaskID          = "id"
+	ColumnTaskTitle       = "title"
+	ColumnTaskDescription = "description"
+	ColumnTaskStatus      = "status"
+	ColumnTaskAuthorID    = "author_id"
+	ColumnTaskAssignieID  = "assignie_id"
+	ColumnTaskBoardID     = "board_id"
+	ColumnTaskUpdatedAt   = "updated_at"
 )

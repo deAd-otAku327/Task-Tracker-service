@@ -10,11 +10,14 @@ import (
 func CatchPQErrors(err error) error {
 	if pqErr, ok := err.(*pq.Error); ok {
 		switch pqErr.Code.Name() {
-		case dbconsts.PGInvalidTextRepresentationError:
+		case dbconsts.PQInvalidTextRepresentationError:
 			return dberrors.ErrsEnumMismatch[pqErr.DataTypeName]
 
-		case dbconsts.PGUniqueViolationError:
+		case dbconsts.PQUniqueViolationError:
 			return dberrors.ErrsUniqueCheckViolation[pqErr.Constraint]
+
+		case dbconsts.PQForeignKeyViolation:
+			return dberrors.ErrsForeignKeyViolation[pqErr.Constraint]
 		}
 	}
 

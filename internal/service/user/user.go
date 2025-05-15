@@ -54,10 +54,10 @@ func (s *userService) RegistrateUser(ctx context.Context, request *models.UserRe
 
 	response, dberror := s.storage.CreateUser(ctx, modelmap.MapToUser(request))
 	if dberror != nil {
-		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUniqueUsername] {
+		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUserUniqueUsername] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrUsernameOccupied, http.StatusBadRequest)
 		}
-		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUniqueEmail] {
+		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintUserUniqueEmail] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrEmailOccupied, http.StatusBadRequest)
 		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)

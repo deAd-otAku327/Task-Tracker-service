@@ -31,7 +31,7 @@ type storage struct {
 }
 
 func New(cfg config.DBConn, logger *slog.Logger) (DB, error) {
-	database, err := sql.Open(dbconsts.PGDriverName, cfg.URL)
+	database, err := sql.Open(dbconsts.PQDriverName, cfg.URL)
 	if err != nil {
 		return nil, err
 	}

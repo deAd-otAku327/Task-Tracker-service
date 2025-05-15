@@ -9,6 +9,8 @@ import (
 	"task-tracker-service/internal/middleware"
 	"task-tracker-service/internal/service/_shared/serverrors"
 	"task-tracker-service/internal/storage/db"
+	"task-tracker-service/internal/storage/db/_shared/dbconsts"
+	"task-tracker-service/internal/storage/db/_shared/dberrors"
 	"task-tracker-service/internal/types/dto"
 	"task-tracker-service/internal/types/enum"
 	"task-tracker-service/internal/types/models"
@@ -87,6 +89,12 @@ func (s *taskService) CreateTask(ctx context.Context, request *models.TaskCreate
 
 	response, dberror := s.storage.CreateTask(ctx, modelmap.MapToTask(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskAssignieIDForeignKey] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardDForeignKey] {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
+		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

@@ -25,4 +25,6 @@ var (
 	ErrInvalidPassword         = errors.New("password is invalid")
 	ErrUsernameOccupied        = errors.New("username is already occupied")
 	ErrEmailOccupied           = errors.New("email is already linked to another account")
+	ErrNoUserToAssign          = errors.New("no user with provided id to be assigned")
+	ErrNoBoardToLink           = errors.New("no board with provided id to be linked with")
 )

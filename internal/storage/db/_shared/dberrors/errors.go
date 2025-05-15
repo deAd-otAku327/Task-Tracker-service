@@ -15,7 +15,13 @@ var (
 
 	// Error map with constraint as a key.
 	ErrsUniqueCheckViolation = map[string]error{
-		dbconsts.ConstraintUniqueUsername: errors.New("unique db check on username violated"),
-		dbconsts.ConstraintUniqueEmail:    errors.New("unique db check on email violated"),
+		dbconsts.ConstraintUserUniqueUsername: errors.New("unique db check on username violated"),
+		dbconsts.ConstraintUserUniqueEmail:    errors.New("unique db check on email violated"),
+	}
+
+	// Error map with constraint as a key.
+	ErrsForeignKeyViolation = map[string]error{
+		dbconsts.ConstraintTaskAssignieIDForeignKey: errors.New("foreign key task assignie_id to users violated"),
+		dbconsts.ConstraintTaskBoardDForeignKey:     errors.New("foreign key task board_id to users violated"),
 	}
 )
