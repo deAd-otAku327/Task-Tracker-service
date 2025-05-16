@@ -18,7 +18,7 @@ import (
 
 type TaskService interface {
 	GetTasks(ctx context.Context, request *models.TaskFilterModel) (dto.GetTasksResponse, *dto.ErrorResponse)
-	GetTaskByID(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse)
+	GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse)
 	CreateTask(ctx context.Context, request *models.TaskCreateModel) (*dto.TaskResponse, *dto.ErrorResponse)
 	UpdateTask(ctx context.Context, request *models.TaskUpdateModel) (*dto.TaskResponse, *dto.ErrorResponse)
 }
@@ -60,14 +60,17 @@ func (s *taskService) GetTasks(ctx context.Context, request *models.TaskFilterMo
 	return modelmap.MapToGetTasksResponse(response), nil
 }
 
-func (s *taskService) GetTaskByID(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
+func (s *taskService) GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
 	err := request.Validate()
 	if err != nil {
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
-	response, dberror := s.storage.GetTaskByID(ctx, request.TaskID)
+	response, dberror := s.storage.GetTaskSummaryByID(ctx, request.TaskID)
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsReturned {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoTask, http.StatusBadRequest)
+		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
@@ -92,7 +95,7 @@ func (s *taskService) CreateTask(ctx context.Context, request *models.TaskCreate
 		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskAssignieIDForeignKey] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
 		}
-		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardDForeignKey] {
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardIDForeignKey] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
 		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
@@ -122,10 +125,9 @@ func (s *taskService) UpdateTask(ctx context.Context, request *models.TaskUpdate
 		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskAssignieIDForeignKey] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
 		}
-		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardDForeignKey] {
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardIDForeignKey] {
 			return nil, errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
 		}
-		s.logger.Error("update task: %s", dberror.Error())
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

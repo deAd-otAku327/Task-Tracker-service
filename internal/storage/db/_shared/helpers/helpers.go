@@ -1,6 +1,8 @@
 package helpers
 
 import (
+	"database/sql"
+	"log/slog"
 	"task-tracker-service/internal/storage/db/_shared/dbconsts"
 	"task-tracker-service/internal/storage/db/_shared/dberrors"
 
@@ -22,4 +24,12 @@ func CatchPQErrors(err error) error {
 	}
 
 	return err
+}
+
+func RollbackTransaction(logger *slog.Logger, tx *sql.Tx) {
+	txErr := tx.Rollback()
+	if txErr != nil {
+		logger.Error("tx rollback error: " + txErr.Error())
+	}
+
 }

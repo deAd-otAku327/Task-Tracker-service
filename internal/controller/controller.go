@@ -54,8 +54,8 @@ func (c *controller) GetTasks() http.HandlerFunc {
 	return c.taskHandler.GetTasks()
 }
 
-func (c *controller) GetTaskByID() http.HandlerFunc {
-	return c.taskHandler.GetTaskByID()
+func (c *controller) GetTaskSummary() http.HandlerFunc {
+	return c.taskHandler.GetTaskSummary()
 }
 
 func (c *controller) CreateTask() http.HandlerFunc {

@@ -10,7 +10,8 @@ const (
 	ConstraintUserUniqueUsername       = "users_username_unique"
 	ConstraintUserUniqueEmail          = "users_email_unique"
 	ConstraintTaskAssignieIDForeignKey = "tasks_assignie_id_fk"
-	ConstraintTaskBoardDForeignKey     = "tasks_board_id_fk"
+	ConstraintTaskBoardIDForeignKey    = "tasks_board_id_fk"
+	ConstraintCommentTaskIDForeignKey  = "comments_task_id_fk"
 
 	DatatypeEnumTaskStatus = "task_status_enum"
 
@@ -33,4 +34,15 @@ const (
 	ColumnTaskAssignieID  = "assignie_id"
 	ColumnTaskBoardID     = "board_id"
 	ColumnTaskUpdatedAt   = "updated_at"
+
+	ColumnCommentID       = "id"
+	ColumnCommentTaskID   = "task_id"
+	ColumnCommentAuthorID = "author_id"
+	ColumnCommentText     = "text"
+	ColumnCommentDateTime = "date_time"
+
+	ColumnDashboardID          = "id"
+	ColumnDashboardTitle       = "title"
+	ColumnDashboardDescription = "description"
+	ColumnDashboardUpdatedAt   = "updated_at"
 )

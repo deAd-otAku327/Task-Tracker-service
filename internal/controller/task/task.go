@@ -19,7 +19,7 @@ import (
 
 type TaskHandler interface {
 	GetTasks() http.HandlerFunc
-	GetTaskByID() http.HandlerFunc
+	GetTaskSummary() http.HandlerFunc
 	CreateTask() http.HandlerFunc
 	UpdateTask() http.HandlerFunc
 }
@@ -61,7 +61,7 @@ func (h *taskHandler) GetTasks() http.HandlerFunc {
 	}
 }
 
-func (h *taskHandler) GetTaskByID() http.HandlerFunc {
+func (h *taskHandler) GetTaskSummary() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// No check for empty map cause of path-param cannot be missing.
 		param, err := strconv.Atoi(mux.Vars(r)[apiconsts.URLParamTaskID])
@@ -73,7 +73,7 @@ func (h *taskHandler) GetTaskByID() http.HandlerFunc {
 			TaskID: param,
 		}
 
-		response, servErr := h.service.GetTaskByID(r.Context(), dtomap.MapToTaskIDParamModel(&request))
+		response, servErr := h.service.GetTaskSummary(r.Context(), dtomap.MapToTaskIDParamModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return

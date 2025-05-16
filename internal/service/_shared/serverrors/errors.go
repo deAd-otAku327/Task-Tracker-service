@@ -32,4 +32,6 @@ var (
 
 	ErrNoUserToAssign = errors.New("no user with provided id to be assigned")
 	ErrNoBoardToLink  = errors.New("no board with provided id to be linked with")
+
+	ErrNoTask = errors.New("no task with provided id")
 )

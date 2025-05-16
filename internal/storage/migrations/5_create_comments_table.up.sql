@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS comments
     task_id INTEGER NOT NULL,
     author_id INTEGER NOT NULL,
     text TEXT NOT NULL,
-    dateTime TIMESTAMP NOT NULL DEFAULT NOW()
+    date_time TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 ALTER TABLE comments ADD CONSTRAINT comments_task_id_fk

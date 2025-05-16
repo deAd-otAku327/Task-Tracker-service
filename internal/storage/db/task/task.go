@@ -11,7 +11,6 @@ import (
 	"task-tracker-service/internal/storage/db/_shared/helpers"
 	"task-tracker-service/internal/types/entities"
 	"task-tracker-service/internal/types/models"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/lib/pq"
@@ -19,7 +18,7 @@ import (
 
 type TaskDB interface {
 	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error)
-	GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error)
+	GetTaskSummaryByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error)
 	CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error)
 	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error)
 }
@@ -83,8 +82,52 @@ func (s *taskStorage) GetTasksWithFilter(ctx context.Context, filter *entities.T
 	return entitymap.MapToTaskListModel(tasks), nil
 }
 
-func (s *taskStorage) GetTaskByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error) {
-	return nil, nil
+func (s *taskStorage) GetTaskSummaryByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error) {
+	var task *entities.Task
+	var author *entities.User
+	var assignie *entities.User
+	var dashboard *entities.Dashboard
+	var comments []*entities.Comment
+
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	task, author, err = getTaskWithAuthor(ctx, tx, taskID)
+	if err != nil {
+		helpers.RollbackTransaction(s.logger, tx)
+		return nil, err
+	}
+
+	if task.AssignieID.Valid {
+		assignie, err = getTaskAssignieByID(ctx, tx, int(task.AssignieID.Int32))
+		if err != nil {
+			helpers.RollbackTransaction(s.logger, tx)
+			return nil, err
+		}
+	}
+
+	if task.BoardID.Valid {
+		dashboard, err = getTaskBoardByID(ctx, tx, int(task.BoardID.Int32))
+		if err != nil {
+			helpers.RollbackTransaction(s.logger, tx)
+			return nil, err
+		}
+	}
+
+	comments, err = getTaskCommentsByTaskID(ctx, tx, taskID)
+	if err != nil {
+		helpers.RollbackTransaction(s.logger, tx)
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return entitymap.MapToTaskSummaryModel(task, comments, author, assignie, dashboard), nil
 }
 
 func (s *taskStorage) CreateTask(ctx context.Context, createTask *entities.Task) (*models.TaskModel, error) {
@@ -122,7 +165,7 @@ func (s *taskStorage) CreateTask(ctx context.Context, createTask *entities.Task)
 }
 
 func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error) {
-	updateQuery, args, err := s.buildUpdateTaskQueryFields(taskUpdate).
+	updateQuery, args, err := buildUpdateTaskQueryFields(taskUpdate).
 		Where(sq.Eq{dbconsts.ColumnTaskID: taskUpdate.ID}).
 		Where(sq.Or{
 			sq.Eq{dbconsts.ColumnTaskAuthorID: taskUpdate.InitiatorID},
@@ -146,28 +189,4 @@ func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskU
 	}
 
 	return entitymap.MapToTaskModel(&task), nil
-}
-
-func (s *taskStorage) buildUpdateTaskQueryFields(taskUpdate *entities.TaskUpdate) sq.UpdateBuilder {
-	query := sq.Update(dbconsts.TableTasks)
-
-	if taskUpdate.Title != nil {
-		query = query.Set(dbconsts.ColumnTaskTitle, taskUpdate.Title)
-	}
-	if taskUpdate.Description != nil {
-		query = query.Set(dbconsts.ColumnTaskDescription, taskUpdate.Description)
-	}
-	if taskUpdate.Status != nil {
-		query = query.Set(dbconsts.ColumnTaskStatus, taskUpdate.Status)
-	}
-	if taskUpdate.AssignieID != nil {
-		query = query.Set(dbconsts.ColumnTaskAssignieID, taskUpdate.AssignieID)
-	}
-	if taskUpdate.BoardID != nil {
-		query = query.Set(dbconsts.ColumnTaskBoardID, taskUpdate.BoardID)
-	}
-
-	query = query.Set(dbconsts.ColumnTaskUpdatedAt, time.Now())
-
-	return query
 }

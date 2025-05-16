@@ -80,7 +80,7 @@ func configureRouter(controller controller.Controller, middleware middleware.Mid
 	protected.HandleFunc("/users", controller.GetUsers()).Methods(http.MethodGet)
 
 	protected.HandleFunc("/tasks", controller.GetTasks()).Methods(http.MethodGet)
-	protected.HandleFunc("/tasks/{taskId:[1-9][0-9]*}", controller.GetTaskByID()).Methods(http.MethodGet)
+	protected.HandleFunc("/tasks/{taskId:[1-9][0-9]*}", controller.GetTaskSummary()).Methods(http.MethodGet)
 	protected.HandleFunc("/tasks/create", controller.CreateTask()).Methods(http.MethodPost)
 	protected.HandleFunc("/tasks/update", controller.UpdateTask()).Methods(http.MethodPost)
 

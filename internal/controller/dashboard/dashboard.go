@@ -62,7 +62,7 @@ func (h *dashboardHandler) GetDashboardByID() http.HandlerFunc {
 			BoardID: param,
 		}
 
-		response, servErr := h.service.GetDashboardByID(r.Context(), dtomap.MapToDashboardIDParamModel(&request))
+		response, servErr := h.service.GetDashboardSummary(r.Context(), dtomap.MapToDashboardIDParamModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return

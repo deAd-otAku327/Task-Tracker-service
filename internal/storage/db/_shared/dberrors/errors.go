@@ -22,6 +22,7 @@ var (
 	// Error map with constraint as a key.
 	ErrsForeignKeyViolation = map[string]error{
 		dbconsts.ConstraintTaskAssignieIDForeignKey: errors.New("foreign key task assignie_id to users violated"),
-		dbconsts.ConstraintTaskBoardDForeignKey:     errors.New("foreign key task board_id to users violated"),
+		dbconsts.ConstraintTaskBoardIDForeignKey:    errors.New("foreign key task board_id to dashboards violated"),
+		dbconsts.ConstraintCommentTaskIDForeignKey:  errors.New("foreign key comment task_id to tasks violated"),
 	}
 )

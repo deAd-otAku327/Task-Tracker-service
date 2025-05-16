@@ -53,8 +53,8 @@ func (s *service) GetTasks(ctx context.Context, request *models.TaskFilterModel)
 	return s.taskService.GetTasks(ctx, request)
 }
 
-func (s *service) GetTaskByID(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
-	return s.taskService.GetTaskByID(ctx, request)
+func (s *service) GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
+	return s.taskService.GetTaskSummary(ctx, request)
 }
 
 func (s *service) CreateTask(ctx context.Context, request *models.TaskCreateModel) (*dto.TaskResponse, *dto.ErrorResponse) {
@@ -73,9 +73,9 @@ func (s *service) GetDashboards(ctx context.Context) (dto.GetDashboardsResponse,
 	return s.dashboardService.GetDashboards(ctx)
 }
 
-func (s *service) GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel,
+func (s *service) GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel,
 ) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse) {
-	return s.dashboardService.GetDashboardByID(ctx, request)
+	return s.dashboardService.GetDashboardSummary(ctx, request)
 }
 
 func (s *service) CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse) {

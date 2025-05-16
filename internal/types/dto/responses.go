@@ -25,7 +25,7 @@ type GetTaskByIDResponse struct {
 	Comments    []*CommentResponse `json:"comments,omitempty"`
 	Author      *UserResponse      `json:"author"`
 	Assignie    *UserResponse      `json:"assignie,omitempty"`
-	LinkedBoard *BoardData         `json:"linkedBoard"`
+	LinkedBoard *BoardData         `json:"linkedBoard,omitempty"`
 }
 
 type BoardData struct {

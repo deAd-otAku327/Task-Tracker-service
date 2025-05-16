@@ -15,7 +15,7 @@ import (
 
 type DashboardService interface {
 	GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse)
-	GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse)
+	GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse)
 	CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
 	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
 	DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse
@@ -49,14 +49,14 @@ func (s *dashboardService) GetDashboards(ctx context.Context) (dto.GetDashboards
 	return modelmap.MapToGetDashboardsResponse(response), nil
 }
 
-func (s *dashboardService) GetDashboardByID(ctx context.Context, request *models.DashboardIDParamModel,
+func (s *dashboardService) GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel,
 ) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse) {
 	err := request.Validate()
 	if err != nil {
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
-	response, dberror := s.storage.GetDashboardByID(ctx, request.BoardID)
+	response, dberror := s.storage.GetDashboardSummaryByID(ctx, request.BoardID)
 	if dberror != nil {
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
