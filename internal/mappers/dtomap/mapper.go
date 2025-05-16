@@ -27,8 +27,8 @@ func MapToTaskFilterModel(request *dto.GetTasksParams) *models.TaskFilterModel {
 	}
 }
 
-func MapToTaskIDParamModel(request *dto.GetTaskByIDParam) *models.TaskIDParamModel {
-	return &models.TaskIDParamModel{
+func MapToTaskIDParamModel(request *dto.GetTaskSummaryParam) *models.TaskSummaryParamModel {
+	return &models.TaskSummaryParamModel{
 		TaskID: request.TaskID,
 	}
 }
@@ -60,8 +60,8 @@ func MapToCommentCreateModel(request *dto.PostCommentRequest) *models.CommentCre
 	}
 }
 
-func MapToDashboardIDParamModel(request *dto.GetDashboardByIDParam) *models.DashboardIDParamModel {
-	return &models.DashboardIDParamModel{
+func MapToDashboardIDParamModel(request *dto.GetDashboardSummaryParam) *models.DashboardSummaryParamModel {
+	return &models.DashboardSummaryParamModel{
 		BoardID: request.BoardID,
 	}
 }

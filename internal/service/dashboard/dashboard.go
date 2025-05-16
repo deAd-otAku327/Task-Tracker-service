@@ -15,7 +15,7 @@ import (
 
 type DashboardService interface {
 	GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse)
-	GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse)
+	GetDashboardSummary(ctx context.Context, request *models.DashboardSummaryParamModel) (*dto.GetDashboardSummaryResponse, *dto.ErrorResponse)
 	CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
 	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
 	DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse
@@ -49,8 +49,8 @@ func (s *dashboardService) GetDashboards(ctx context.Context) (dto.GetDashboards
 	return modelmap.MapToGetDashboardsResponse(response), nil
 }
 
-func (s *dashboardService) GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel,
-) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse) {
+func (s *dashboardService) GetDashboardSummary(ctx context.Context, request *models.DashboardSummaryParamModel,
+) (*dto.GetDashboardSummaryResponse, *dto.ErrorResponse) {
 	err := request.Validate()
 	if err != nil {
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)

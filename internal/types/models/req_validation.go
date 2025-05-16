@@ -66,7 +66,7 @@ func (m TaskFilterModel) Validate() error {
 	return nil
 }
 
-func (m TaskIDParamModel) Validate() error {
+func (m TaskSummaryParamModel) Validate() error {
 	if m.TaskID < 1 {
 		return fmt.Errorf("%s:%d", serverrors.ErrIDInvalid, m.TaskID)
 	}
@@ -141,7 +141,7 @@ func (m CommentCreateModel) Validate() error {
 	return nil
 }
 
-func (m DashboardIDParamModel) Validate() error {
+func (m DashboardSummaryParamModel) Validate() error {
 	if m.BoardID < 1 {
 		return fmt.Errorf("%s:%d", serverrors.ErrIDInvalid, m.BoardID)
 	}

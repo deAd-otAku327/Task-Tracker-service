@@ -58,7 +58,7 @@ func (h *dashboardHandler) GetDashboardByID() http.HandlerFunc {
 			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
 			return
 		}
-		request := dto.GetDashboardByIDParam{
+		request := dto.GetDashboardSummaryParam{
 			BoardID: param,
 		}
 

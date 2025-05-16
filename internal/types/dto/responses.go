@@ -20,7 +20,7 @@ type TaskResponse struct {
 
 type GetTasksResponse []*TaskResponse
 
-type GetTaskByIDResponse struct {
+type GetTaskSummaryResponse struct {
 	Task        *TaskResponse      `json:"task"`
 	Comments    []*CommentResponse `json:"comments,omitempty"`
 	Author      *UserResponse      `json:"author"`
@@ -49,7 +49,7 @@ type DashboardResponse struct {
 
 type GetDashboardsResponse []*DashboardResponse
 
-type GetDashboardByIDResponse struct {
+type GetDashboardSummaryResponse struct {
 	Dashboard *DashboardResponse `json:"dashboard"`
 	Tasks     []*TaskResponse    `json:"tasks"`
 	Admins    []*UserResponse    `json:"admin"`

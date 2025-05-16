@@ -53,7 +53,7 @@ func (s *service) GetTasks(ctx context.Context, request *models.TaskFilterModel)
 	return s.taskService.GetTasks(ctx, request)
 }
 
-func (s *service) GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
+func (s *service) GetTaskSummary(ctx context.Context, request *models.TaskSummaryParamModel) (*dto.GetTaskSummaryResponse, *dto.ErrorResponse) {
 	return s.taskService.GetTaskSummary(ctx, request)
 }
 
@@ -73,8 +73,8 @@ func (s *service) GetDashboards(ctx context.Context) (dto.GetDashboardsResponse,
 	return s.dashboardService.GetDashboards(ctx)
 }
 
-func (s *service) GetDashboardSummary(ctx context.Context, request *models.DashboardIDParamModel,
-) (*dto.GetDashboardByIDResponse, *dto.ErrorResponse) {
+func (s *service) GetDashboardSummary(ctx context.Context, request *models.DashboardSummaryParamModel,
+) (*dto.GetDashboardSummaryResponse, *dto.ErrorResponse) {
 	return s.dashboardService.GetDashboardSummary(ctx, request)
 }
 

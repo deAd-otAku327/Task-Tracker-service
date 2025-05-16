@@ -17,7 +17,7 @@ type GetTasksParams struct {
 	Status   []string `schema:"status,omitempty,default:created,in_progress"`
 }
 
-type GetTaskByIDParam struct {
+type GetTaskSummaryParam struct {
 	TaskID int
 }
 
@@ -42,7 +42,7 @@ type PostCommentRequest struct {
 	Text   string `json:"text"`
 }
 
-type GetDashboardByIDParam struct {
+type GetDashboardSummaryParam struct {
 	BoardID int
 }
 

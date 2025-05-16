@@ -18,7 +18,7 @@ import (
 
 type TaskService interface {
 	GetTasks(ctx context.Context, request *models.TaskFilterModel) (dto.GetTasksResponse, *dto.ErrorResponse)
-	GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse)
+	GetTaskSummary(ctx context.Context, request *models.TaskSummaryParamModel) (*dto.GetTaskSummaryResponse, *dto.ErrorResponse)
 	CreateTask(ctx context.Context, request *models.TaskCreateModel) (*dto.TaskResponse, *dto.ErrorResponse)
 	UpdateTask(ctx context.Context, request *models.TaskUpdateModel) (*dto.TaskResponse, *dto.ErrorResponse)
 }
@@ -60,7 +60,7 @@ func (s *taskService) GetTasks(ctx context.Context, request *models.TaskFilterMo
 	return modelmap.MapToGetTasksResponse(response), nil
 }
 
-func (s *taskService) GetTaskSummary(ctx context.Context, request *models.TaskIDParamModel) (*dto.GetTaskByIDResponse, *dto.ErrorResponse) {
+func (s *taskService) GetTaskSummary(ctx context.Context, request *models.TaskSummaryParamModel) (*dto.GetTaskSummaryResponse, *dto.ErrorResponse) {
 	err := request.Validate()
 	if err != nil {
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)

@@ -67,8 +67,8 @@ func MapToGetTasksResponse(response models.TaskListModel) dto.GetTasksResponse {
 	return res
 }
 
-func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskByIDResponse {
-	return &dto.GetTaskByIDResponse{
+func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskSummaryResponse {
+	return &dto.GetTaskSummaryResponse{
 		Task: MapToTaskResponse(response.Task),
 		Comments: func() []*dto.CommentResponse {
 			if response.Comments == nil {
@@ -129,8 +129,8 @@ func MapToGetDashboardsResponse(response models.DashboardListModel) dto.GetDashb
 	return res
 }
 
-func MapToGetDashboardByIDResponse(response *models.DashboardSummaryModel) *dto.GetDashboardByIDResponse {
-	return &dto.GetDashboardByIDResponse{
+func MapToGetDashboardByIDResponse(response *models.DashboardSummaryModel) *dto.GetDashboardSummaryResponse {
+	return &dto.GetDashboardSummaryResponse{
 		Dashboard: MapToDashboardResponse(response.Dashboard),
 		Tasks:     MapToGetTasksResponse(response.Tasks),
 		Admins:    MapToGetUsersResponse(response.Admins),

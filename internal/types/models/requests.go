@@ -20,7 +20,7 @@ type TaskFilterModel struct {
 	AssignieID *int // Service calculation.
 }
 
-type TaskIDParamModel struct {
+type TaskSummaryParamModel struct {
 	TaskID int
 }
 
@@ -49,7 +49,7 @@ type CommentCreateModel struct {
 	Text     string
 }
 
-type DashboardIDParamModel struct {
+type DashboardSummaryParamModel struct {
 	BoardID int
 }
 

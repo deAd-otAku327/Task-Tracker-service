@@ -69,7 +69,7 @@ func (h *taskHandler) GetTaskSummary() http.HandlerFunc {
 			responser.MakeErrorResponseJSON(w, errmap.MapToErrorResponse(apierrors.ErrInvalidRequestParamsFormat, http.StatusBadRequest))
 			return
 		}
-		request := dto.GetTaskByIDParam{
+		request := dto.GetTaskSummaryParam{
 			TaskID: param,
 		}
 
