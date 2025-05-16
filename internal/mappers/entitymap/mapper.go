@@ -91,6 +91,9 @@ func MapToTaskSummaryModel(respTask *entities.Task, respComms []*entities.Commen
 	return &models.TaskSummaryModel{
 		Task: MapToTaskModel(respTask),
 		Comments: func() []*models.CommentModel {
+			if respComms == nil {
+				return nil
+			}
 			res := make([]*models.CommentModel, 0, len(respComms))
 			for _, entity := range respComms {
 				res = append(res, MapToCommentModel(entity))
