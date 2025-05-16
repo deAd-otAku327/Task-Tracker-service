@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log/slog"
 	"task-tracker-service/internal/mappers/entitymap"
 	"task-tracker-service/internal/storage/db/_shared/dbconsts"
@@ -37,7 +38,7 @@ func (s *userStorage) CreateUser(ctx context.Context, createUser *entities.User)
 	insertQuery, args, err := sq.Insert(dbconsts.TableUsers).
 		Columns(dbconsts.ColumnUserName, dbconsts.ColumnUserEmail, dbconsts.ColumnUserPassword).
 		Values(createUser.Username, createUser.Email, createUser.Password).
-		Suffix("RETURNING *").
+		Suffix(fmt.Sprintf("RETURNING %s,%s,%s", dbconsts.ColumnUserID, dbconsts.ColumnUserName, dbconsts.ColumnUserEmail)).
 		PlaceholderFormat(sq.Dollar).ToSql()
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (s *userStorage) CreateUser(ctx context.Context, createUser *entities.User)
 
 	var user entities.User
 
-	err = row.Scan(&user.ID, &user.Username, &user.Email, &user.Password)
+	err = row.Scan(&user.ID, &user.Username, &user.Email)
 	if err != nil {
 		return nil, helpers.CatchPQErrors(err)
 	}
@@ -56,7 +57,9 @@ func (s *userStorage) CreateUser(ctx context.Context, createUser *entities.User)
 }
 
 func (s *userStorage) GetUserByUsername(ctx context.Context, username string) (*models.UserModel, error) {
-	query, args, err := sq.Select("*").
+	query, args, err := sq.Select(
+		dbconsts.ColumnUserID, dbconsts.ColumnUserName,
+		dbconsts.ColumnUserEmail, dbconsts.ColumnUserPassword).
 		From(dbconsts.TableUsers).
 		Where(sq.Eq{dbconsts.ColumnUserName: username}).
 		PlaceholderFormat(sq.Dollar).ToSql()
@@ -80,7 +83,7 @@ func (s *userStorage) GetUserByUsername(ctx context.Context, username string) (*
 }
 
 func (s *userStorage) GetUsers(ctx context.Context) (models.UserListModel, error) {
-	query, args, err := sq.Select("*").
+	query, args, err := sq.Select(dbconsts.ColumnUserID, dbconsts.ColumnUserName, dbconsts.ColumnUserEmail).
 		From(dbconsts.TableUsers).
 		PlaceholderFormat(sq.Dollar).ToSql()
 	if err != nil {
@@ -97,7 +100,7 @@ func (s *userStorage) GetUsers(ctx context.Context) (models.UserListModel, error
 
 	for rows.Next() {
 		user := entities.User{}
-		err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.Password)
+		err := rows.Scan(&user.ID, &user.Username, &user.Email)
 		if err != nil {
 			return nil, err
 		}
