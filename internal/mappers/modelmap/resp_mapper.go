@@ -8,6 +8,9 @@ import (
 const DateTimeFormat = "2006-01-02 15:04:05"
 
 func MapToUserResponse(response *models.UserModel) *dto.UserResponse {
+	if response == nil {
+		return nil
+	}
 	return &dto.UserResponse{
 		ID:       response.ID,
 		Username: response.Username,
@@ -16,6 +19,9 @@ func MapToUserResponse(response *models.UserModel) *dto.UserResponse {
 }
 
 func MapToGetUsersResponse(response models.UserListModel) dto.GetUsersResponse {
+	if response == nil {
+		return nil
+	}
 	res := make(dto.GetUsersResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToUserResponse(model))
@@ -24,6 +30,9 @@ func MapToGetUsersResponse(response models.UserListModel) dto.GetUsersResponse {
 }
 
 func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
+	if response == nil {
+		return nil
+	}
 	return &dto.TaskResponse{
 		ID:          response.ID,
 		Title:       response.Title,
@@ -48,6 +57,9 @@ func MapToTaskResponse(response *models.TaskModel) *dto.TaskResponse {
 }
 
 func MapToGetTasksResponse(response models.TaskListModel) dto.GetTasksResponse {
+	if response == nil {
+		return nil
+	}
 	res := make(dto.GetTasksResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToTaskResponse(model))
@@ -59,6 +71,9 @@ func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskByI
 	return &dto.GetTaskByIDResponse{
 		Task: MapToTaskResponse(response.Task),
 		Comments: func() []*dto.CommentResponse {
+			if response.Comments == nil {
+				return nil
+			}
 			res := make([]*dto.CommentResponse, 0, len(response.Comments))
 			for _, model := range response.Comments {
 				res = append(res, MapToCommentResponse(model))
@@ -67,14 +82,22 @@ func MapToGetTaskByIDResponse(response *models.TaskSummaryModel) *dto.GetTaskByI
 		}(),
 		Author:   MapToUserResponse(response.Author),
 		Assignie: MapToUserResponse(response.Assignie),
-		LinkedBoard: &dto.BoardData{
-			ID:    response.LinkedBoard.ID,
-			Title: response.LinkedBoard.Title,
-		},
+		LinkedBoard: func() *dto.BoardData {
+			if response.LinkedBoard != nil {
+				return &dto.BoardData{
+					ID:    response.LinkedBoard.ID,
+					Title: response.LinkedBoard.Title,
+				}
+			}
+			return nil
+		}(),
 	}
 }
 
 func MapToCommentResponse(response *models.CommentModel) *dto.CommentResponse {
+	if response == nil {
+		return nil
+	}
 	return &dto.CommentResponse{
 		ID:       response.ID,
 		AuthorID: response.AuthorID,
@@ -84,6 +107,9 @@ func MapToCommentResponse(response *models.CommentModel) *dto.CommentResponse {
 }
 
 func MapToDashboardResponse(response *models.DashboardModel) *dto.DashboardResponse {
+	if response == nil {
+		return nil
+	}
 	return &dto.DashboardResponse{
 		ID:          response.ID,
 		Title:       response.Title,
@@ -93,6 +119,9 @@ func MapToDashboardResponse(response *models.DashboardModel) *dto.DashboardRespo
 }
 
 func MapToGetDashboardsResponse(response models.DashboardListModel) dto.GetDashboardsResponse {
+	if response == nil {
+		return nil
+	}
 	res := make(dto.GetDashboardsResponse, 0, len(response))
 	for _, model := range response {
 		res = append(res, MapToDashboardResponse(model))
@@ -103,19 +132,7 @@ func MapToGetDashboardsResponse(response models.DashboardListModel) dto.GetDashb
 func MapToGetDashboardByIDResponse(response *models.DashboardSummaryModel) *dto.GetDashboardByIDResponse {
 	return &dto.GetDashboardByIDResponse{
 		Dashboard: MapToDashboardResponse(response.Dashboard),
-		Tasks: func() []*dto.TaskResponse {
-			res := make([]*dto.TaskResponse, 0, len(response.Tasks))
-			for _, model := range response.Tasks {
-				res = append(res, MapToTaskResponse(model))
-			}
-			return res
-		}(),
-		Admins: func() []*dto.UserResponse {
-			res := make([]*dto.UserResponse, 0, len(response.Admins))
-			for _, model := range response.Admins {
-				res = append(res, MapToUserResponse(model))
-			}
-			return res
-		}(),
+		Tasks:     MapToGetTasksResponse(response.Tasks),
+		Admins:    MapToGetUsersResponse(response.Admins),
 	}
 }

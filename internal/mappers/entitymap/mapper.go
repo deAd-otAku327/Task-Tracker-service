@@ -6,6 +6,9 @@ import (
 )
 
 func MapToUserModel(response *entities.User) *models.UserModel {
+	if response == nil {
+		return nil
+	}
 	return &models.UserModel{
 		ID:             response.ID,
 		Username:       response.Username,
@@ -15,6 +18,9 @@ func MapToUserModel(response *entities.User) *models.UserModel {
 }
 
 func MapToUserListModel(response []*entities.User) models.UserListModel {
+	if response == nil {
+		return nil
+	}
 	result := make(models.UserListModel, 0, len(response))
 	for _, u := range response {
 		result = append(result, MapToUserModel(u))
@@ -24,6 +30,9 @@ func MapToUserListModel(response []*entities.User) models.UserListModel {
 }
 
 func MapToTaskModel(response *entities.Task) *models.TaskModel {
+	if response == nil {
+		return nil
+	}
 	return &models.TaskModel{
 		ID:    response.ID,
 		Title: response.Title,
@@ -53,6 +62,9 @@ func MapToTaskModel(response *entities.Task) *models.TaskModel {
 }
 
 func MapToTaskListModel(response []*entities.Task) models.TaskListModel {
+	if response == nil {
+		return nil
+	}
 	result := make(models.TaskListModel, 0, len(response))
 	for _, t := range response {
 		result = append(result, MapToTaskModel(t))
@@ -62,6 +74,9 @@ func MapToTaskListModel(response []*entities.Task) models.TaskListModel {
 }
 
 func MapToCommentModel(response *entities.Comment) *models.CommentModel {
+	if response == nil {
+		return nil
+	}
 	return &models.CommentModel{
 		ID:       response.ID,
 		AuthorID: response.AuthorID,
@@ -89,6 +104,9 @@ func MapToTaskSummaryModel(respTask *entities.Task, respComms []*entities.Commen
 }
 
 func MapToDashboardModel(response *entities.Dashboard) *models.DashboardModel {
+	if response == nil {
+		return nil
+	}
 	return &models.DashboardModel{
 		ID:    response.ID,
 		Title: response.Title,
@@ -103,6 +121,9 @@ func MapToDashboardModel(response *entities.Dashboard) *models.DashboardModel {
 }
 
 func MapToDashboardListModel(response []*entities.Dashboard) models.DashboardListModel {
+	if response == nil {
+		return nil
+	}
 	result := make(models.DashboardListModel, 0, len(response))
 	for _, d := range response {
 		result = append(result, MapToDashboardModel(d))
@@ -116,19 +137,7 @@ func MapToDashboardSummaryModel(respBoard *entities.Dashboard, respTasks []*enti
 
 	return &models.DashboardSummaryModel{
 		Dashboard: MapToDashboardModel(respBoard),
-		Tasks: func() []*models.TaskModel {
-			res := make([]*models.TaskModel, 0, len(respTasks))
-			for _, entity := range respTasks {
-				res = append(res, MapToTaskModel(entity))
-			}
-			return res
-		}(),
-		Admins: func() []*models.UserModel {
-			res := make([]*models.UserModel, 0, len(respAdmins))
-			for _, entity := range respAdmins {
-				res = append(res, MapToUserModel(entity))
-			}
-			return res
-		}(),
+		Tasks:     MapToTaskListModel(respTasks),
+		Admins:    MapToUserListModel(respAdmins),
 	}
 }
