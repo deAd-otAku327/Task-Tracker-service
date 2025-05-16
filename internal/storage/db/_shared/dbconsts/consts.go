@@ -12,6 +12,7 @@ const (
 	ConstraintTaskAssignieIDForeignKey = "tasks_assignie_id_fk"
 	ConstraintTaskBoardIDForeignKey    = "tasks_board_id_fk"
 	ConstraintCommentTaskIDForeignKey  = "comments_task_id_fk"
+	ConstraintBoardToAdminPrimaryKey   = "board_to_admin_pk"
 
 	DatatypeEnumTaskStatus = "task_status_enum"
 
