@@ -330,10 +330,6 @@ paths:
       responses:
         '200':
           description: Задача обновлена.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
         '400':
           description: Неверный запрос.
           content:
@@ -508,10 +504,6 @@ paths:
       responses:
         '200':
           description: Дашборд обновлен.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dashboard'
         '400':
           description: Неверный запрос.
           content:
