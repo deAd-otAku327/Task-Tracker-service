@@ -1,5 +1,7 @@
 package dto
 
+import "strings"
+
 type PostUsersLoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -13,8 +15,23 @@ type PostUsersRegisterRequest struct {
 
 // Defaults are from internal/enum.
 type GetTasksParams struct {
-	Relation string   `schema:"relation,omitempty,default:assigned_to_me"`
-	Status   []string `schema:"status,omitempty,default:created,in_progress"`
+	Relation string     `schema:"relation,omitempty,default:assigned_to_me"`
+	Status   StatusPack `schema:"status,omitempty,default:created,in_progress"`
+}
+
+type StatusPack struct {
+	Statuses []string
+}
+
+// Implementation of gorilla/schema interface.
+func (sp *StatusPack) UnmarshalText(text []byte) error {
+	parsed := strings.Split(string(text), ",")
+	for i := 0; i < len(parsed); i++ {
+		parsed[i] = strings.TrimSpace(parsed[i])
+	}
+
+	sp.Statuses = parsed
+	return nil
 }
 
 type GetTaskSummaryParam struct {

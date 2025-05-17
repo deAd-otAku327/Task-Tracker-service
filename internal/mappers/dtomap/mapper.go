@@ -23,7 +23,7 @@ func MapToUserRegisterModel(request *dto.PostUsersRegisterRequest) *models.UserR
 func MapToTaskFilterModel(request *dto.GetTasksParams) *models.TaskFilterModel {
 	return &models.TaskFilterModel{
 		Relation: request.Relation,
-		Status:   request.Status,
+		Status:   request.Status.Statuses,
 	}
 }
 
