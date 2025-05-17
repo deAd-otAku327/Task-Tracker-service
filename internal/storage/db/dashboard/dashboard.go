@@ -8,6 +8,7 @@ import (
 	"task-tracker-service/internal/mappers/entitymap"
 	"task-tracker-service/internal/storage/db/_shared/dbconsts"
 	"task-tracker-service/internal/storage/db/_shared/dberrors"
+	"task-tracker-service/internal/storage/db/_shared/helpers"
 	"task-tracker-service/internal/types/entities"
 	"task-tracker-service/internal/types/models"
 
@@ -15,7 +16,7 @@ import (
 )
 
 type DashboardDB interface {
-	GetDashboardsForAdminID(ctx context.Context, userID int) (models.DashboardListModel, error)
+	GetDashboardsForAdminID(ctx context.Context, adminID int) (models.DashboardListModel, error)
 	GetDashboardSummaryByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error)
 	CreateDashboard(ctx context.Context, createDashboard *entities.Dashboard) (*models.DashboardModel, error)
 	UpdateDashboard(ctx context.Context, updateDashboard *entities.DashboardUpdate) error
@@ -36,12 +37,78 @@ func New(db *sql.DB, logger *slog.Logger) DashboardDB {
 	}
 }
 
-func (s *dashboardStorage) GetDashboardsForAdminID(ctx context.Context, userID int) (models.DashboardListModel, error) {
-	return nil, nil
+func (s *dashboardStorage) GetDashboardsForAdminID(ctx context.Context, adminID int) (models.DashboardListModel, error) {
+	joinSettings := fmt.Sprintf("%s ON (%s = %s)",
+		dbconsts.TableBoardToAdmin, dbconsts.ColumnDashboardID, dbconsts.ColumnBoardToAdminBoardID)
+
+	query, args, err := sq.Select(
+		dbconsts.ColumnDashboardID, dbconsts.ColumnDashboardTitle,
+		dbconsts.ColumnDashboardDescription, dbconsts.ColumnDashboardUpdatedAt,
+	).
+		From(dbconsts.TableDashboards).
+		Join(joinSettings).
+		Where(sq.Eq{dbconsts.ColumnBoardToAdminAdminID: adminID}).
+		OrderBy(dbconsts.ColumnDashboardUpdatedAt).
+		Suffix("DESC").
+		PlaceholderFormat(sq.Dollar).ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	rows, err := s.db.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	dashboards := make([]*entities.Dashboard, 0)
+
+	for rows.Next() {
+		dashboard := entities.Dashboard{}
+		err := rows.Scan(
+			&dashboard.ID, &dashboard.Title, &dashboard.Description, &dashboard.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		dashboards = append(dashboards, &dashboard)
+	}
+	if rows.Err() != nil {
+		return nil, err
+	}
+
+	return entitymap.MapToDashboardListModel(dashboards), nil
 }
 
 func (s *dashboardStorage) GetDashboardSummaryByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error) {
-	return nil, nil
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	dashboard, err := selectDashboardByBoardID(ctx, tx, boardID)
+	if err != nil {
+		helpers.RollbackTransaction(s.logger, tx)
+		return nil, err
+	}
+
+	tasks, err := selectDashboardTasksByBoardID(ctx, tx, boardID)
+	if err != nil {
+		helpers.RollbackTransaction(s.logger, tx)
+		return nil, err
+	}
+
+	admins, err := selectDashboardAdminsByBoardID(ctx, tx, boardID)
+	if err != nil {
+		helpers.RollbackTransaction(s.logger, tx)
+		return nil, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
+
+	return entitymap.MapToDashboardSummaryModel(dashboard, tasks, admins), nil
 }
 
 func (s *dashboardStorage) CreateDashboard(ctx context.Context, createDashboard *entities.Dashboard) (*models.DashboardModel, error) {
@@ -69,12 +136,7 @@ func (s *dashboardStorage) CreateDashboard(ctx context.Context, createDashboard 
 }
 
 func (s *dashboardStorage) UpdateDashboard(ctx context.Context, updateDashboard *entities.DashboardUpdate) error {
-	subq := fmt.Sprintf(
-		"(SELECT %s FROM %s WHERE %s=%d AND %s=%d)",
-		dbconsts.ColumnBoardToAdminAdminID, dbconsts.TableBoardToAdmin,
-		dbconsts.ColumnBoardToAdminAdminID, updateDashboard.InitiatorID,
-		dbconsts.ColumnBoardToAdminBoardID, updateDashboard.ID,
-	)
+	subq := makeSubqueryForAdminRightsCheck(updateDashboard.ID, updateDashboard.InitiatorID)
 
 	updateQuery, args, err := buildUpdateDashboardQueryFields(updateDashboard).
 		Where(sq.Eq{dbconsts.ColumnDashboardID: updateDashboard.ID}).
@@ -102,12 +164,7 @@ func (s *dashboardStorage) UpdateDashboard(ctx context.Context, updateDashboard 
 }
 
 func (s *dashboardStorage) DeleteDashboard(ctx context.Context, deleteDashboard *entities.DashboardDelete) error {
-	subq := fmt.Sprintf(
-		"(SELECT %s FROM %s WHERE %s=%d AND %s=%d)",
-		dbconsts.ColumnBoardToAdminAdminID, dbconsts.TableBoardToAdmin,
-		dbconsts.ColumnBoardToAdminAdminID, deleteDashboard.InitiatorID,
-		dbconsts.ColumnBoardToAdminBoardID, deleteDashboard.BoardID,
-	)
+	subq := makeSubqueryForAdminRightsCheck(deleteDashboard.BoardID, deleteDashboard.InitiatorID)
 
 	deleteQuery, args, err := sq.Delete(dbconsts.TableDashboards).
 		Where(sq.Eq{dbconsts.ColumnDashboardID: deleteDashboard.BoardID}).

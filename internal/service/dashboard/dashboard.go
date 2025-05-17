@@ -59,6 +59,9 @@ func (s *dashboardService) GetDashboardSummary(ctx context.Context, request *mod
 
 	response, dberror := s.storage.GetDashboardSummaryByID(ctx, request.BoardID)
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsReturned {
+			return nil, errmap.MapToErrorResponse(serverrors.ErrNoDashboard, http.StatusBadRequest)
+		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

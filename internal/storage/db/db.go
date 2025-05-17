@@ -83,8 +83,8 @@ func (s *storage) CreateComment(ctx context.Context, comment *entities.Comment) 
 	return s.commentStorage.CreateComment(ctx, comment)
 }
 
-func (s *storage) GetDashboardsForAdminID(ctx context.Context, userID int) (models.DashboardListModel, error) {
-	return s.dashboardStorage.GetDashboardsForAdminID(ctx, userID)
+func (s *storage) GetDashboardsForAdminID(ctx context.Context, adminID int) (models.DashboardListModel, error) {
+	return s.dashboardStorage.GetDashboardsForAdminID(ctx, adminID)
 }
 
 func (s *storage) GetDashboardSummaryByID(ctx context.Context, boardID int) (*models.DashboardSummaryModel, error) {

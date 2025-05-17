@@ -12,7 +12,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-func getTaskWithAuthor(ctx context.Context, tx *sql.Tx, taskID int) (*entities.Task, *entities.User, error) {
+func selectTaskWithAuthor(ctx context.Context, tx *sql.Tx, taskID int) (*entities.Task, *entities.User, error) {
 	joinSettings := fmt.Sprintf("%s ON (%s.%s = %s.%s)",
 		dbconsts.TableUsers, dbconsts.TableTasks, dbconsts.ColumnTaskAuthorID, dbconsts.TableUsers, dbconsts.ColumnUserID)
 
@@ -42,7 +42,7 @@ func getTaskWithAuthor(ctx context.Context, tx *sql.Tx, taskID int) (*entities.T
 	return &task, &author, nil
 }
 
-func getTaskCommentsByTaskID(ctx context.Context, tx *sql.Tx, taskID int) ([]*entities.Comment, error) {
+func selectTaskCommentsByTaskID(ctx context.Context, tx *sql.Tx, taskID int) ([]*entities.Comment, error) {
 	query, args, err := sq.Select("*").
 		From(dbconsts.TableComments).
 		Where(sq.Eq{dbconsts.ColumnCommentTaskID: taskID}).
@@ -80,7 +80,7 @@ func getTaskCommentsByTaskID(ctx context.Context, tx *sql.Tx, taskID int) ([]*en
 	return comments, nil
 }
 
-func getTaskAssignieByID(ctx context.Context, tx *sql.Tx, userID int) (*entities.User, error) {
+func selectTaskAssignieByID(ctx context.Context, tx *sql.Tx, userID int) (*entities.User, error) {
 	query, args, err := sq.Select(
 		dbconsts.ColumnUserID, dbconsts.ColumnUserName, dbconsts.ColumnUserEmail).
 		From(dbconsts.TableUsers).
@@ -105,7 +105,7 @@ func getTaskAssignieByID(ctx context.Context, tx *sql.Tx, userID int) (*entities
 	return &user, nil
 }
 
-func getTaskBoardByID(ctx context.Context, tx *sql.Tx, boardID int) (*entities.Dashboard, error) {
+func selectTaskBoardByID(ctx context.Context, tx *sql.Tx, boardID int) (*entities.Dashboard, error) {
 	query, args, err := sq.Select("*").
 		From(dbconsts.TableDashboards).
 		Where(sq.Eq{dbconsts.ColumnDashboardID: boardID}).

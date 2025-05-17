@@ -94,14 +94,14 @@ func (s *taskStorage) GetTaskSummaryByID(ctx context.Context, taskID int) (*mode
 		return nil, err
 	}
 
-	task, author, err = getTaskWithAuthor(ctx, tx, taskID)
+	task, author, err = selectTaskWithAuthor(ctx, tx, taskID)
 	if err != nil {
 		helpers.RollbackTransaction(s.logger, tx)
 		return nil, err
 	}
 
 	if task.AssignieID.Valid {
-		assignie, err = getTaskAssignieByID(ctx, tx, int(task.AssignieID.Int32))
+		assignie, err = selectTaskAssignieByID(ctx, tx, int(task.AssignieID.Int32))
 		if err != nil {
 			helpers.RollbackTransaction(s.logger, tx)
 			return nil, err
@@ -109,14 +109,14 @@ func (s *taskStorage) GetTaskSummaryByID(ctx context.Context, taskID int) (*mode
 	}
 
 	if task.BoardID.Valid {
-		dashboard, err = getTaskBoardByID(ctx, tx, int(task.BoardID.Int32))
+		dashboard, err = selectTaskBoardByID(ctx, tx, int(task.BoardID.Int32))
 		if err != nil {
 			helpers.RollbackTransaction(s.logger, tx)
 			return nil, err
 		}
 	}
 
-	comments, err = getTaskCommentsByTaskID(ctx, tx, taskID)
+	comments, err = selectTaskCommentsByTaskID(ctx, tx, taskID)
 	if err != nil {
 		helpers.RollbackTransaction(s.logger, tx)
 		return nil, err

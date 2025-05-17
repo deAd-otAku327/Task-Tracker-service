@@ -34,5 +34,6 @@ var (
 	ErrNoBoardToLink  = errors.New("no board with provided id to be linked with")
 
 	ErrNoTask             = errors.New("no task with provided id")
+	ErrNoDashboard        = errors.New("no dashboard with provided id")
 	ErrUserIsAlreadyAdmin = errors.New("user with provided id is already admin for provided dashboard")
 )
