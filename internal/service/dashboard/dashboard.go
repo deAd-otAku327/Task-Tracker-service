@@ -9,6 +9,7 @@ import (
 	"task-tracker-service/internal/middleware"
 	"task-tracker-service/internal/service/_shared/serverrors"
 	"task-tracker-service/internal/storage/db"
+	"task-tracker-service/internal/storage/db/_shared/dberrors"
 	"task-tracker-service/internal/types/dto"
 	"task-tracker-service/internal/types/models"
 )
@@ -17,7 +18,7 @@ type DashboardService interface {
 	GetDashboards(ctx context.Context) (dto.GetDashboardsResponse, *dto.ErrorResponse)
 	GetDashboardSummary(ctx context.Context, request *models.DashboardSummaryParamModel) (*dto.GetDashboardSummaryResponse, *dto.ErrorResponse)
 	CreateDashboard(ctx context.Context, request *models.DashboardCreateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
-	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse)
+	UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) *dto.ErrorResponse
 	DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse
 	AddBoardAdmin(ctx context.Context, request *models.DashboardAdminActionModel) *dto.ErrorResponse
 	DeleteBoardAdmin(ctx context.Context, request *models.DashboardAdminActionModel) *dto.ErrorResponse
@@ -85,25 +86,28 @@ func (s *dashboardService) CreateDashboard(ctx context.Context, request *models.
 	return modelmap.MapToDashboardResponse(response), nil
 }
 
-func (s *dashboardService) UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse) {
+func (s *dashboardService) UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) *dto.ErrorResponse {
 	err := request.Validate()
 	if err != nil {
-		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
+		return errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
 	currUserID, ok := ctx.Value(middleware.UserIDKey).(int)
 	if !ok {
-		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
 	request.InitiatorID = currUserID
 
-	response, dberror := s.storage.UpdateDashboard(ctx, modelmap.MapToDashboardUpdate(request))
+	dberror := s.storage.UpdateDashboard(ctx, modelmap.MapToDashboardUpdate(request))
 	if dberror != nil {
-		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+		if dberror == dberrors.ErrNoRowsAffected {
+			return errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
+		}
+		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
-	return modelmap.MapToDashboardResponse(response), nil
+	return nil
 }
 
 func (s *dashboardService) DeleteDashboard(ctx context.Context, request *models.DashboardDeleteModel) *dto.ErrorResponse {
@@ -121,6 +125,9 @@ func (s *dashboardService) DeleteDashboard(ctx context.Context, request *models.
 
 	dberror := s.storage.DeleteDashboard(ctx, modelmap.MapToDashboardDelete(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsAffected {
+			return errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
+		}
 		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

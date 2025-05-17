@@ -91,16 +91,16 @@ func (s *storage) GetDashboardSummaryByID(ctx context.Context, boardID int) (*mo
 	return s.dashboardStorage.GetDashboardSummaryByID(ctx, boardID)
 }
 
-func (s *storage) CreateDashboard(ctx context.Context, dashboard *entities.Dashboard) (*models.DashboardModel, error) {
-	return s.dashboardStorage.CreateDashboard(ctx, dashboard)
+func (s *storage) CreateDashboard(ctx context.Context, createDashboard *entities.Dashboard) (*models.DashboardModel, error) {
+	return s.dashboardStorage.CreateDashboard(ctx, createDashboard)
 }
 
-func (s *storage) UpdateDashboard(ctx context.Context, dashboardUpdate *entities.DashboardUpdate) (*models.DashboardModel, error) {
-	return s.dashboardStorage.UpdateDashboard(ctx, dashboardUpdate)
+func (s *storage) UpdateDashboard(ctx context.Context, updateDashboard *entities.DashboardUpdate) error {
+	return s.dashboardStorage.UpdateDashboard(ctx, updateDashboard)
 }
 
-func (s *storage) DeleteDashboard(ctx context.Context, dashboardDelete *entities.DashboardDelete) error {
-	return s.dashboardStorage.DeleteDashboard(ctx, dashboardDelete)
+func (s *storage) DeleteDashboard(ctx context.Context, deleteDashboard *entities.DashboardDelete) error {
+	return s.dashboardStorage.DeleteDashboard(ctx, deleteDashboard)
 }
 
 func (s *storage) AddBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {

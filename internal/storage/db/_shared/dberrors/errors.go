@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrNoRowsReturned = errors.New("required rows in query result missing")
+	ErrNoRowsAffected = errors.New("required rows in query result missing")
 
 	// Error map with datatype name as a key.
 	ErrsEnumMismatch = map[string]error{

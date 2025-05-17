@@ -20,18 +20,19 @@ var (
 	ErrTitleFieldEmpty = errors.New("required non-empty 'title' is empty")
 	ErrTextFieldEmpty  = errors.New("required non-empty 'text' is empty")
 
-	ErrNoFieldsToUpdate = errors.New("provided no filds for update")
+	ErrNoFieldsToUpdate = errors.New("provided no fields for update")
 
-	ErrSomethingWentWrong      = errors.New("sorry, something went wrong")
-	ErrUsernameIsNotRegistered = errors.New("username is not registered")
-	ErrInvalidPassword         = errors.New("password is invalid")
-	ErrUsernameOccupied        = errors.New("username is already occupied")
-	ErrEmailOccupied           = errors.New("email is already linked to another account")
+	ErrSomethingWentWrong     = errors.New("sorry, something went wrong")
+	ErrAccountIsNotRegistered = errors.New("account is not registered")
+	ErrInvalidPassword        = errors.New("password is invalid")
+	ErrUsernameOccupied       = errors.New("username is already occupied")
+	ErrEmailOccupied          = errors.New("email is already linked to another account")
 
-	ErrUpdateImpossible = errors.New("you have no resourse with provided id in your jurisdiction")
+	ErrManipulationImpossible = errors.New("you have no resourse with provided id in your jurisdiction")
 
 	ErrNoUserToAssign = errors.New("no user with provided id to be assigned")
 	ErrNoBoardToLink  = errors.New("no board with provided id to be linked with")
 
-	ErrNoTask = errors.New("no task with provided id")
+	ErrNoTask             = errors.New("no task with provided id")
+	ErrUserIsAlreadyAdmin = errors.New("user with provided id is already admin for provided dashboard")
 )

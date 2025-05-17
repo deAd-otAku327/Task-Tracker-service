@@ -46,4 +46,7 @@ const (
 	ColumnDashboardTitle       = "title"
 	ColumnDashboardDescription = "description"
 	ColumnDashboardUpdatedAt   = "updated_at"
+
+	ColumnBoardToAdminBoardID = "board_id"
+	ColumnBoardToAdminAdminID = "admin_id"
 )

@@ -82,7 +82,7 @@ func (s *service) CreateDashboard(ctx context.Context, request *models.Dashboard
 	return s.dashboardService.CreateDashboard(ctx, request)
 }
 
-func (s *service) UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) (*dto.DashboardResponse, *dto.ErrorResponse) {
+func (s *service) UpdateDashboard(ctx context.Context, request *models.DashboardUpdateModel) *dto.ErrorResponse {
 	return s.dashboardService.UpdateDashboard(ctx, request)
 }
 

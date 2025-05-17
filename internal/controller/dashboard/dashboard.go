@@ -100,13 +100,13 @@ func (h *dashboardHandler) UpdateDashboard() http.HandlerFunc {
 			return
 		}
 
-		response, servErr := h.service.UpdateDashboard(r.Context(), dtomap.MapToDashboardUpdateModel(&request))
+		servErr := h.service.UpdateDashboard(r.Context(), dtomap.MapToDashboardUpdateModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return
 		}
 
-		responser.MakeResponseJSON(w, http.StatusOK, &response)
+		responser.MakeResponseJSON(w, http.StatusOK, nil)
 	}
 }
 

@@ -75,7 +75,7 @@ func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginMo
 	response, dberror := s.storage.GetUserByUsername(ctx, request.Username)
 	if dberror != nil {
 		if dberror == dberrors.ErrNoRowsReturned {
-			return nil, errmap.MapToErrorResponse(serverrors.ErrUsernameIsNotRegistered, http.StatusUnauthorized)
+			return nil, errmap.MapToErrorResponse(serverrors.ErrAccountIsNotRegistered, http.StatusUnauthorized)
 		}
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
