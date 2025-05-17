@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"context"
+	"log"
 	"log/slog"
 	"net/http"
 	"task-tracker-service/internal/mappers/errmap"
@@ -9,6 +10,7 @@ import (
 	"task-tracker-service/internal/middleware"
 	"task-tracker-service/internal/service/_shared/serverrors"
 	"task-tracker-service/internal/storage/db"
+	"task-tracker-service/internal/storage/db/_shared/dbconsts"
 	"task-tracker-service/internal/storage/db/_shared/dberrors"
 	"task-tracker-service/internal/types/dto"
 	"task-tracker-service/internal/types/models"
@@ -140,6 +142,7 @@ func (s *dashboardService) DeleteDashboard(ctx context.Context, request *models.
 func (s *dashboardService) AddBoardAdmin(ctx context.Context, request *models.DashboardAdminActionModel) *dto.ErrorResponse {
 	err := request.Validate()
 	if err != nil {
+		log.Println(err)
 		return errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
@@ -152,6 +155,15 @@ func (s *dashboardService) AddBoardAdmin(ctx context.Context, request *models.Da
 
 	dberror := s.storage.AddBoardAdmin(ctx, modelmap.MapToDashboardAdminAction(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrsUniqueCheckViolation[dbconsts.ConstraintBoardToAdminPrimaryKey] {
+			return errmap.MapToErrorResponse(serverrors.ErrUserIsAlreadyAdmin, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintBoardToAdminAdminIDForeignKey] {
+			return errmap.MapToErrorResponse(serverrors.ErrNoUser, http.StatusBadRequest)
+		}
+		if dberror == dberrors.ErrNoRowsAffected {
+			return errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
+		}
 		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
@@ -173,6 +185,9 @@ func (s *dashboardService) DeleteBoardAdmin(ctx context.Context, request *models
 
 	dberror := s.storage.DeleteBoardAdmin(ctx, modelmap.MapToDashboardAdminAction(request))
 	if dberror != nil {
+		if dberror == dberrors.ErrNoRowsAffected {
+			return errmap.MapToErrorResponse(serverrors.ErrSuchBoardToAdminBound, http.StatusBadRequest)
+		}
 		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 

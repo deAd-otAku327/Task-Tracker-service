@@ -28,12 +28,14 @@ var (
 	ErrUsernameOccupied       = errors.New("username is already occupied")
 	ErrEmailOccupied          = errors.New("email is already linked to another account")
 
-	ErrManipulationImpossible = errors.New("you have no resourse with provided id in your jurisdiction")
+	ErrManipulationImpossible = errors.New("no resourse with provided id in your jurisdiction")
 
 	ErrNoUserToAssign = errors.New("no user with provided id to be assigned")
 	ErrNoBoardToLink  = errors.New("no board with provided id to be linked with")
 
-	ErrNoTask             = errors.New("no task with provided id")
-	ErrNoDashboard        = errors.New("no dashboard with provided id")
-	ErrUserIsAlreadyAdmin = errors.New("user with provided id is already admin for provided dashboard")
+	ErrNoTask                = errors.New("no task with provided id")
+	ErrNoUser                = errors.New("no user with provided id")
+	ErrNoDashboard           = errors.New("no dashboard with provided id")
+	ErrUserIsAlreadyAdmin    = errors.New("user with provided id is already admin for provided dashboard")
+	ErrSuchBoardToAdminBound = errors.New("board to admin bond doesnt exist")
 )

@@ -7,12 +7,14 @@ const (
 	PQUniqueViolationError           = "unique_violation"
 	PQForeignKeyViolation            = "foreign_key_violation"
 
-	ConstraintUserUniqueUsername       = "users_username_unique"
-	ConstraintUserUniqueEmail          = "users_email_unique"
-	ConstraintTaskAssignieIDForeignKey = "tasks_assignie_id_fk"
-	ConstraintTaskBoardIDForeignKey    = "tasks_board_id_fk"
-	ConstraintCommentTaskIDForeignKey  = "comments_task_id_fk"
-	ConstraintBoardToAdminPrimaryKey   = "board_to_admin_pk"
+	ConstraintUserUniqueUsername            = "users_username_unique"
+	ConstraintUserUniqueEmail               = "users_email_unique"
+	ConstraintTaskAssignieIDForeignKey      = "tasks_assignie_id_fk"
+	ConstraintTaskBoardIDForeignKey         = "tasks_board_id_fk"
+	ConstraintCommentTaskIDForeignKey       = "comments_task_id_fk"
+	ConstraintBoardToAdminPrimaryKey        = "board_to_admin_pk"
+	ConstraintBoardToAdminBoardIDForeignKey = "board_to_admin_board_id_fk"
+	ConstraintBoardToAdminAdminIDForeignKey = "board_to_admin_admin_id_fk"
 
 	DatatypeEnumTaskStatus = "task_status_enum"
 

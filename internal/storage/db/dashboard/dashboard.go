@@ -192,9 +192,59 @@ func (s *dashboardStorage) DeleteDashboard(ctx context.Context, deleteDashboard 
 }
 
 func (s *dashboardStorage) AddBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
+	subq := makeSubqueryForAdminRightsCheck(boardAdminAction.BoardID, boardAdminAction.InitiatorID)
+	selectForInsert := sq.Select(fmt.Sprintf("%d, %d WHERE EXISTS %s", boardAdminAction.BoardID, boardAdminAction.UserID, subq))
+
+	insertQuery, args, err := sq.Insert(dbconsts.TableBoardToAdmin).
+		Columns(dbconsts.ColumnBoardToAdminBoardID, dbconsts.ColumnBoardToAdminAdminID).
+		Select(selectForInsert).
+		PlaceholderFormat(sq.Dollar).ToSql()
+	if err != nil {
+		return err
+	}
+
+	result, err := s.db.ExecContext(ctx, insertQuery, args...)
+	if err != nil {
+		return helpers.CatchPQErrors(err)
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affected == 0 {
+		return dberrors.ErrNoRowsAffected
+	}
+
 	return nil
 }
 
 func (s *dashboardStorage) DeleteBoardAdmin(ctx context.Context, boardAdminAction *entities.DashboardAdminAction) error {
+	subq := makeSubqueryForAdminRightsCheck(boardAdminAction.BoardID, boardAdminAction.InitiatorID)
+
+	deleteQuery, args, err := sq.Delete(dbconsts.TableBoardToAdmin).
+		Where(sq.Eq{dbconsts.ColumnBoardToAdminBoardID: boardAdminAction.BoardID,
+			dbconsts.ColumnBoardToAdminAdminID: boardAdminAction.UserID}).
+		Where(fmt.Sprintf("%s %s", "EXISTS", subq)).
+		PlaceholderFormat(sq.Dollar).ToSql()
+	if err != nil {
+		return err
+	}
+
+	result, err := s.db.ExecContext(ctx, deleteQuery, args...)
+	if err != nil {
+		return helpers.CatchPQErrors(err)
+	}
+
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affected == 0 {
+		return dberrors.ErrNoRowsAffected
+	}
+
 	return nil
 }
