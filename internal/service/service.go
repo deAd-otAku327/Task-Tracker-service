@@ -61,7 +61,7 @@ func (s *service) CreateTask(ctx context.Context, request *models.TaskCreateMode
 	return s.taskService.CreateTask(ctx, request)
 }
 
-func (s *service) UpdateTask(ctx context.Context, request *models.TaskUpdateModel) (*dto.TaskResponse, *dto.ErrorResponse) {
+func (s *service) UpdateTask(ctx context.Context, request *models.TaskUpdateModel) *dto.ErrorResponse {
 	return s.taskService.UpdateTask(ctx, request)
 }
 

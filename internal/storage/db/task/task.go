@@ -20,7 +20,7 @@ type TaskDB interface {
 	GetTasksWithFilter(ctx context.Context, filter *entities.TaskFilter) (models.TaskListModel, error)
 	GetTaskSummaryByID(ctx context.Context, taskID int) (*models.TaskSummaryModel, error)
 	CreateTask(ctx context.Context, task *entities.Task) (*models.TaskModel, error)
-	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error)
+	UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) error
 }
 
 type taskStorage struct {
@@ -164,29 +164,30 @@ func (s *taskStorage) CreateTask(ctx context.Context, createTask *entities.Task)
 	return entitymap.MapToTaskModel(&task), nil
 }
 
-func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error) {
+func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) error {
 	updateQuery, args, err := buildUpdateTaskQueryFields(taskUpdate).
 		Where(sq.Eq{dbconsts.ColumnTaskID: taskUpdate.ID}).
 		Where(sq.Or{
 			sq.Eq{dbconsts.ColumnTaskAuthorID: taskUpdate.InitiatorID},
 			sq.Eq{dbconsts.ColumnTaskAssignieID: taskUpdate.InitiatorID}}).
-		Suffix("RETURNING *").
 		PlaceholderFormat(sq.Dollar).ToSql()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var task entities.Task
-	row := s.db.QueryRowContext(ctx, updateQuery, args...)
-	err = row.Scan(
-		&task.ID, &task.Title, &task.Description, &task.Status,
-		&task.AuthorID, &task.AssignieID, &task.BoardID, &task.UpdatedAt)
+	result, err := s.db.ExecContext(ctx, updateQuery, args...)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, dberrors.ErrNoRowsReturned
-		}
-		return nil, helpers.CatchPQErrors(err)
+		return err
 	}
 
-	return entitymap.MapToTaskModel(&task), nil
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affected == 0 {
+		return dberrors.ErrNoRowsAffected
+	}
+
+	return nil
 }

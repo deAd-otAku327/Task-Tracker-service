@@ -20,7 +20,7 @@ type TaskService interface {
 	GetTasks(ctx context.Context, request *models.TaskFilterModel) (dto.GetTasksResponse, *dto.ErrorResponse)
 	GetTaskSummary(ctx context.Context, request *models.TaskSummaryParamModel) (*dto.GetTaskSummaryResponse, *dto.ErrorResponse)
 	CreateTask(ctx context.Context, request *models.TaskCreateModel) (*dto.TaskResponse, *dto.ErrorResponse)
-	UpdateTask(ctx context.Context, request *models.TaskUpdateModel) (*dto.TaskResponse, *dto.ErrorResponse)
+	UpdateTask(ctx context.Context, request *models.TaskUpdateModel) *dto.ErrorResponse
 }
 
 type taskService struct {
@@ -104,32 +104,32 @@ func (s *taskService) CreateTask(ctx context.Context, request *models.TaskCreate
 	return modelmap.MapToTaskResponse(response), nil
 }
 
-func (s *taskService) UpdateTask(ctx context.Context, request *models.TaskUpdateModel) (*dto.TaskResponse, *dto.ErrorResponse) {
+func (s *taskService) UpdateTask(ctx context.Context, request *models.TaskUpdateModel) *dto.ErrorResponse {
 	err := request.Validate()
 	if err != nil {
-		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
+		return errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
 	currUserID, ok := ctx.Value(middleware.UserIDKey).(int)
 	if !ok {
-		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
 	request.InitiatorID = currUserID
 
-	response, dberror := s.storage.UpdateTask(ctx, modelmap.MapToTaskUpdate(request))
+	dberror := s.storage.UpdateTask(ctx, modelmap.MapToTaskUpdate(request))
 	if dberror != nil {
 		if dberror == dberrors.ErrNoRowsReturned {
-			return nil, errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
+			return errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
 		}
 		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskAssignieIDForeignKey] {
-			return nil, errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
+			return errmap.MapToErrorResponse(serverrors.ErrNoUserToAssign, http.StatusBadRequest)
 		}
 		if dberror == dberrors.ErrsForeignKeyViolation[dbconsts.ConstraintTaskBoardIDForeignKey] {
-			return nil, errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
+			return errmap.MapToErrorResponse(serverrors.ErrNoBoardToLink, http.StatusBadRequest)
 		}
-		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
+		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
-	return modelmap.MapToTaskResponse(response), nil
+	return nil
 }

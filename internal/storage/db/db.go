@@ -75,7 +75,7 @@ func (s *storage) CreateTask(ctx context.Context, task *entities.Task) (*models.
 	return s.taskStorage.CreateTask(ctx, task)
 }
 
-func (s *storage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) (*models.TaskModel, error) {
+func (s *storage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskUpdate) error {
 	return s.taskStorage.UpdateTask(ctx, taskUpdate)
 }
 

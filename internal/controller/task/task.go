@@ -111,12 +111,12 @@ func (h *taskHandler) UpdateTask() http.HandlerFunc {
 			return
 		}
 
-		response, servErr := h.service.UpdateTask(r.Context(), dtomap.MapToTaskUpdateModel(&request))
+		servErr := h.service.UpdateTask(r.Context(), dtomap.MapToTaskUpdateModel(&request))
 		if servErr != nil {
 			responser.MakeErrorResponseJSON(w, servErr)
 			return
 		}
 
-		responser.MakeResponseJSON(w, http.StatusOK, &response)
+		responser.MakeResponseJSON(w, http.StatusOK, nil)
 	}
 }
