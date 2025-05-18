@@ -177,7 +177,7 @@ func (s *taskStorage) UpdateTask(ctx context.Context, taskUpdate *entities.TaskU
 
 	result, err := s.db.ExecContext(ctx, updateQuery, args...)
 	if err != nil {
-		return err
+		return helpers.CatchPQErrors(err)
 	}
 
 	affected, err := result.RowsAffected()
