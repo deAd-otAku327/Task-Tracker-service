@@ -186,7 +186,7 @@ func (s *dashboardService) DeleteBoardAdmin(ctx context.Context, request *models
 	dberror := s.storage.DeleteBoardAdmin(ctx, modelmap.MapToDashboardAdminAction(request))
 	if dberror != nil {
 		if dberror == dberrors.ErrNoRowsAffected {
-			return errmap.MapToErrorResponse(serverrors.ErrSuchBoardToAdminBound, http.StatusBadRequest)
+			return errmap.MapToErrorResponse(serverrors.ErrManipulationImpossible, http.StatusBadRequest)
 		}
 		return errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
