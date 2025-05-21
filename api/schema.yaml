@@ -13,8 +13,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         username:
           type: string
         email:
@@ -26,19 +25,18 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         title:
           type: string
-        discription:
+        description:
           type: string
         status:
           type: string
           enum: [created, in_progress, done, dropped]
         assignie:
-          type: bool
+          type: boolean
         board:
-          type: bool
+          type: boolean
         updated_at:
           type: string
           format: date-time
@@ -48,36 +46,35 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
         title:
           type: string
-        discription:
+        description:
           type: string
         updated_at:
           type: string
           format: date-time
-      required: [id, title, discription, updated_at]  
+      required: [id, title, description, updated_at]  
 
     Comment:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
-        author:
-          type: string
+          type: integer
+        authorId:
+          type: int
         text:
           type: string
         dateTime:
-          type: date-time
-      required: [author, text, dateTime]
+          type: string
+          format: date-time
+      required: [authorId, text, dateTime]
 
     Error:
       type: object
       properties:
         code:
-          type: int32
+          type: integer
           description: http-код ошибки
         message:
           type: string
@@ -91,35 +88,36 @@ components:
 
 paths:
   /register:
-    summary: Регистрация пользователя
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              username:
-                type: string
-              password:
-                type: string
-            required: [email, password]
-    responses:
-        '201':
-          description: Пользователь создан
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-        '400':
-          description: Неверный запрос
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+    post:
+      summary: Регистрация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                username:
+                  type: string
+                password:
+                  type: string
+              required: [email, username, password]
+      responses:
+          '201':
+            description: Пользователь создан
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/User'
+          '400':
+            description: Неверный запрос
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Error'
   
   /login:
     post:
@@ -135,7 +133,7 @@ paths:
                   type: string
                 password:
                   type: string
-              required: [email, password]
+              required: [username, password]
       responses:
         '200':
           description: Успешная авторизация
@@ -150,7 +148,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/users:
+  /users:
     get:
       summary: Получение списка юзеров.
       security:
@@ -169,9 +167,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'  
 
-  /protected/tasks:
+  /tasks:
     get:
       summary: Получение списка задач с фильтрацией по созданным или назначенным на текущего юзера.
       security:
@@ -211,7 +209,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/tasks/{taskId}:
+  /tasks/{taskId}:
     get:
       summary: Просмотр данных задачи.
       security:
@@ -221,8 +219,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '200':
           description: Данные конкретной задачи.
@@ -245,9 +242,8 @@ paths:
                     type: object
                     properties:
                       id: 
-                        type: string
-                        format: uuid
-                      name: 
+                        type: integer
+                      title: 
                         type: string
                 required: [task, author]
 
@@ -264,7 +260,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/tasks/create:
+  /tasks/create:
     post:
       summary: Создание новой задачи.
       security:
@@ -278,11 +274,12 @@ paths:
               properties:
                 title:
                   type: string
-                discription:
+                description:
                   type: string
-                linkedBoard:
-                  type: string
-                  format: uuid
+                assignie_id:
+                  type: integer
+                linkedBoard_id:
+                  type: integer
               required: [title]
       responses:
         '201':
@@ -304,7 +301,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/tasks/update:
+  /tasks/update:
     post:
       summary: Обновление задачи.
       security:
@@ -317,29 +314,22 @@ paths:
               type: object
               properties:
                 taskId:
-                  type: string
-                  format: uuid
+                  type: integer
                 title:
                   type: string
-                discription:
+                description:
                   type: string
                 status:
                   type: string
                   enum: [in_progress, done, dropped]
-                assignie:
-                  type: string
-                  format: uuid
-                linkedBoard:
-                  type: string
-                  format: uuid
+                assignie_id:
+                  type: integer
+                linkedBoard_id:
+                  type: integer
               required: [taskId]
       responses:
         '200':
           description: Задача обновлена.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Task'
         '400':
           description: Неверный запрос.
           content:
@@ -353,7 +343,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/tasks/comment:
+  /comment:
     post:
       summary: Добавление комментария к задаче.
       security:
@@ -365,9 +355,11 @@ paths:
             schema:
               type: object
               properties:
+                taskId:
+                  type: integer
                 text: 
                   type: string
-              required: [text]
+              required: [taskId, text]
       responses:
         '201':
           description: Комментарий добавлен.
@@ -388,7 +380,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/dashboards:
+  /dashboards:
     get:
       summary: Получение списка дашбордов, в которых текущий пользователь числится админом.
       security:
@@ -410,7 +402,7 @@ paths:
                 $ref: '#/components/schemas/Error'
 
 
-  /protected/dashboards/{boardId}:
+  /dashboards/{boardId}:
     get:  
       summary: Просмотр данных дашборда.
       security:
@@ -420,8 +412,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
-            format: uuid
+            type: integer
       responses:
         '200':
             description: Данные конкретного дашборда.
@@ -454,7 +445,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/dashboards/create:
+  /dashboards/create:
     post:
       summary: Создание нового дашборда.
       security:
@@ -468,7 +459,7 @@ paths:
               properties:
                 title:
                   type: string
-                discription:
+                description:
                   type: string
               required: [title]
       responses:
@@ -491,7 +482,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'        
 
-  /protected/dashboards/update:
+  /dashboards/update:
     post:
       summary: Обновление дашборда.
       security:
@@ -504,20 +495,15 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
                 title:
                   type: string
-                discription:
+                description:
                   type: string
               required: [boardID]
       responses:
         '200':
           description: Дашборд обновлен.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dashboard'
         '400':
           description: Неверный запрос.
           content:
@@ -531,7 +517,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'        
   
-  /protected/dashboards/delete:
+  /dashboards/delete:
     post:
       summary: Удаление дашборда.
       security:
@@ -544,8 +530,7 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
       responses:
         '200':
             description: Удаление успешно.
@@ -562,7 +547,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  /protected/dashboards/addAdmin:
+/dashboards/addBoardAdmin:
     post: 
       summary: Добавление админа дашборда.
       security:
@@ -575,19 +560,13 @@ paths:
               type: object
               properties:
                 boardId:
-                  type: string
-                  format: uuid
+                  type: integer
                 userId:
-                  type: string
-                  format: uuid
+                  type: integer
               required: [boardId, userId]
       responses:
         '200':
             description: Добавление успешно.
-            content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
         '400':
           description: Неверный запрос.
           content:
@@ -602,37 +581,35 @@ paths:
                 $ref: '#/components/schemas/Error'      
 
 
-  /protected/dashboards/deleteAdmin:
-    post:   
-      summary: Удаление админа дашборда.
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
+/dashboards/deleteBoardAdmin:
+  post:   
+    summary: Удаление админа дашборда.
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              boardId:
+                type: integer
+              userId:
+                type: integer
+            required: [boardId, userId]
+    responses:
+      '200':
+          description: Удаление успешно.
+      '400':
+        description: Неверный запрос.
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                boardId:
-                  type: string
-                  format: uuid
-                userId:
-                  type: string
-                  format: uuid
-              required: [boardId, userId]
-      responses:
-        '200':
-            description: Удаление успешно.
-        '400':
-          description: Неверный запрос.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Доступ запрещен.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'  
+              $ref: '#/components/schemas/Error'
+      '403':
+        description: Доступ запрещен.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'
