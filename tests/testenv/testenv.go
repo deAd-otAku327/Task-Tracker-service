@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"task-tracker-service/internal/app"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -13,10 +14,30 @@ import (
 	_ "github.com/lib/pq"
 )
 
+var (
+	TestManager TestEnvironment
+	ENV         = "testing"
+)
+
 var dbEnv = map[string]string{
 	"PGUSER":            "postgres",
 	"POSTGRES_PASSWORD": "testing123",
 	"POSTGRES_DB":       "task-tracker-db",
+}
+
+type TestEnvironment struct {
+	TestApp  *app.App
+	Migrator *migrate.Migrate
+}
+
+func (te *TestEnvironment) CleanupDB() error {
+	if err := te.Migrator.Down(); err != nil && err != migrate.ErrNoChange {
+		return err
+	}
+	if err := te.Migrator.Up(); err != nil {
+		return err
+	}
+	return nil
 }
 
 func InitPostgresTestDB(pool *dockertest.Pool) (*dockertest.Resource, string, error) {
@@ -62,12 +83,13 @@ func InitPostgresTestDB(pool *dockertest.Pool) (*dockertest.Resource, string, er
 		return res, "", err
 	}
 
-	m, err := migrate.NewWithDatabaseInstance(migrationsPath, "postgres", driver)
+	TestManager.Migrator, err = migrate.NewWithDatabaseInstance(migrationsPath, "postgres", driver)
 	if err != nil {
 		return res, "", err
 	}
 
-	if err := m.Up(); err != nil {
+	err = TestManager.CleanupDB()
+	if err != nil {
 		return res, "", err
 	}
 

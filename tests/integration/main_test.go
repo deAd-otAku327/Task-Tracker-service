@@ -3,23 +3,22 @@ package integration
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"path/filepath"
+	"strings"
 	"task-tracker-service/internal/app"
 	"task-tracker-service/internal/config"
 	"task-tracker-service/tests/testenv"
 	"testing"
 
 	"github.com/ory/dockertest/v3"
-)
-
-var (
-	env     = "testing"
-	testApp *app.App
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
 	configDir := filepath.Join("..", "..", "configs")
-	configPath := filepath.Join(configDir, fmt.Sprintf("%s.yaml", env))
+	configPath := filepath.Join(configDir, fmt.Sprintf("%s.yaml", testenv.ENV))
 
 	cfg, err := config.New(configPath)
 	if err != nil {
@@ -48,10 +47,30 @@ func TestMain(m *testing.M) {
 
 	cfg.DBConn.URL = dbConn
 
-	testApp, err = app.New(cfg)
+	testenv.TestManager.TestApp, err = app.New(cfg)
 	if err != nil {
 		log.Panicf("Failed to init test app: %v", err)
 	}
 
 	m.Run()
+}
+
+func TestForbidden(t *testing.T) {
+	endpoints := []string{
+		"GET /users", "GET /tasks", "GET /tasks/1", "POST /tasks/create", "POST /tasks/update",
+		"POST /comment", "GET /dashboards", "GET /dashboards/1", "POST /dashboards/create",
+		"POST /dashboards/update", "POST /dashboards/delete", "POST /dashboards/addBoardAdmin",
+		"POST /dashboards/deleteBoardAdmin",
+	}
+
+	w := httptest.NewRecorder()
+	for _, endpoint := range endpoints {
+		parsed := strings.Fields(endpoint)
+
+		request := httptest.NewRequest(parsed[0], parsed[1], nil)
+
+		testenv.TestManager.TestApp.Server.Handler.ServeHTTP(w, request)
+
+		assert.Equal(t, http.StatusForbidden, w.Result().StatusCode)
+	}
 }
