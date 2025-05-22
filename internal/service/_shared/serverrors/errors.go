@@ -24,7 +24,7 @@ var (
 
 	ErrSomethingWentWrong     = errors.New("sorry, something went wrong")
 	ErrAccountIsNotRegistered = errors.New("account is not registered")
-	ErrInvalidPassword        = errors.New("password is invalid")
+	ErrPasswordInvalid        = errors.New("password is invalid")
 	ErrUsernameOccupied       = errors.New("username is already occupied")
 	ErrEmailOccupied          = errors.New("email is already linked to another account")
 

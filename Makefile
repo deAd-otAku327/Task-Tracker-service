@@ -26,6 +26,9 @@ stop:
 remove:
 	docker-compose down
 
+integration:
+	cd tests/integration && go test -v
+
 migrate-up:
 	$(MIGRATE) -database $(DB_URL) up
 migrate-down:

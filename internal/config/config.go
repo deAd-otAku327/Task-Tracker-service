@@ -12,7 +12,7 @@ type Config struct {
 }
 
 type Server struct {
-	JWTKey            string        `env:"JWTKEY" env-required:"true"`
+	JWTKey            string        `yaml:"jwt_key" env:"JWTKEY" env-required:"true"`
 	Host              string        `yaml:"host" env:"HOST" env-default:"localhost"`
 	Port              string        `yaml:"port" env:"PORT" env-default:"8080"`
 	AuthExpire        time.Duration `yaml:"auth_expire" env-default:"24h"`

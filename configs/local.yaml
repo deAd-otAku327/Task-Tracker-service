@@ -6,3 +6,6 @@ server:
   rps: 1000
   log_level: info
   async_hashing_limit: 10
+
+db-conn:
+  max_open_conns: 15

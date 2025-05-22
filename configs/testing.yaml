@@ -1,0 +1,12 @@
+server:
+  jwt_key: testing-key-example
+  host: localhost
+  port: 8081
+  response_time: 100ms
+  rps: 1000
+  log_level: warn
+  async_hashing_limit: 10
+
+db-conn:
+  url: postgres://plug
+  max_open_conns: 15

@@ -81,7 +81,7 @@ func (s *userService) LoginUser(ctx context.Context, request *models.UserLoginMo
 	}
 
 	if err = s.cryptor.CompareHashAndPassword(response.HashedPassword, request.Password); err != nil {
-		return nil, errmap.MapToErrorResponse(serverrors.ErrInvalidPassword, http.StatusUnauthorized)
+		return nil, errmap.MapToErrorResponse(serverrors.ErrPasswordInvalid, http.StatusUnauthorized)
 	}
 
 	token, err := s.tokenizer.GenerateToken(strconv.Itoa(response.ID))

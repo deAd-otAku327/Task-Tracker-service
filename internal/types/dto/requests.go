@@ -1,6 +1,8 @@
 package dto
 
-import "strings"
+import (
+	"strings"
+)
 
 type PostUsersLoginRequest struct {
 	Username string `json:"username"`
@@ -13,10 +15,9 @@ type PostUsersRegisterRequest struct {
 	Password string `json:"password"`
 }
 
-// Defaults are from internal/enum.
 type GetTasksParams struct {
-	Relation string     `schema:"relation,omitempty,default:assigned_to_me"`
-	Status   StatusPack `schema:"status,omitempty,default:created,in_progress"`
+	Relation *string     `schema:"relation,omitempty"`
+	Status   *StatusPack `schema:"status,omitempty"`
 }
 
 type StatusPack struct {
