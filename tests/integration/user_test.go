@@ -168,6 +168,8 @@ func TestGetUsers_Success(t *testing.T) {
 
 	cookie := w.Result().Cookies()[0]
 
+	w = httptest.NewRecorder()
+
 	testenv.TestManager.TestApp.Server.Handler.ServeHTTP(w, req.PrepareGetUsersRequest(t, cookie))
 	assert.Equal(t, http.StatusOK, w.Code, "Unexpected status code")
 
