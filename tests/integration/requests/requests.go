@@ -95,3 +95,48 @@ func PrepareCreateCommentRequest(t *testing.T, input dto.PostCommentRequest, coo
 
 	return req
 }
+
+func PrepareCreateDashboardRequest(t *testing.T, input dto.PostDashboardsCreateRequest, cookie *http.Cookie) *http.Request {
+	jsonData, err := json.Marshal(input)
+	require.NoError(t, err, "Failed to marshal request body")
+
+	req, err := http.NewRequest("POST", "/dashboards/create", bytes.NewBuffer(jsonData))
+	require.NoError(t, err, "Failed to create request")
+	req.Header.Set("Content-Type", "application/json")
+	req.AddCookie(cookie)
+
+	return req
+}
+
+func PrepareUpdateDashboardRequest(t *testing.T, input dto.PostDashboardsUpdateRequest, cookie *http.Cookie) *http.Request {
+	jsonData, err := json.Marshal(input)
+	require.NoError(t, err, "Failed to marshal request body")
+
+	req, err := http.NewRequest("POST", "/dashboards/update", bytes.NewBuffer(jsonData))
+	require.NoError(t, err, "Failed to create request")
+	req.Header.Set("Content-Type", "application/json")
+	req.AddCookie(cookie)
+
+	return req
+}
+
+func PrepareGetDashboardSummaryRequest(t *testing.T, boardID int, cookie *http.Cookie) *http.Request {
+	req, err := http.NewRequest("GET", fmt.Sprintf("/dashboards/%d", boardID), nil)
+	require.NoError(t, err, "Failed to create request")
+	req.Header.Set("Content-Type", "application/json")
+	req.AddCookie(cookie)
+
+	return req
+}
+
+func PrepareAddDashboardAdminRequest(t *testing.T, input dto.PostDashboardsAdminRequest, cookie *http.Cookie) *http.Request {
+	jsonData, err := json.Marshal(input)
+	require.NoError(t, err, "Failed to marshal request body")
+
+	req, err := http.NewRequest("POST", "/dashboards/addBoardAdmin", bytes.NewBuffer(jsonData))
+	require.NoError(t, err, "Failed to create request")
+	req.Header.Set("Content-Type", "application/json")
+	req.AddCookie(cookie)
+
+	return req
+}
