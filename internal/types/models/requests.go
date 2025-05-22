@@ -13,7 +13,7 @@ type UserRegisterModel struct {
 }
 
 type TaskFilterModel struct {
-	Relation string
+	Relation *string
 	Status   []string
 
 	CreatorID  *int // Service calculation.

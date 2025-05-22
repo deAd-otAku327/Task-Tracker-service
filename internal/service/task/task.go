@@ -16,6 +16,11 @@ import (
 	"task-tracker-service/internal/types/models"
 )
 
+var (
+	defaultRelationFilter = enum.AssignedToMe.String()
+	defaultStatusFilter   = []string{enum.StatusCreated.String(), enum.StatusInProgress.String()}
+)
+
 type TaskService interface {
 	GetTasks(ctx context.Context, request *models.TaskFilterModel) (dto.GetTasksResponse, *dto.ErrorResponse)
 	GetTaskSummary(ctx context.Context, request *models.TaskSummaryParamModel) (*dto.GetTaskSummaryResponse, *dto.ErrorResponse)
@@ -41,14 +46,22 @@ func (s *taskService) GetTasks(ctx context.Context, request *models.TaskFilterMo
 		return nil, errmap.MapToErrorResponse(err, http.StatusBadRequest)
 	}
 
+	if request.Relation == nil {
+		request.Relation = &defaultRelationFilter
+	}
+
+	if request.Status == nil {
+		request.Status = defaultStatusFilter
+	}
+
 	currUserID, ok := ctx.Value(middleware.UserIDKey).(int)
 	if !ok {
 		return nil, errmap.MapToErrorResponse(serverrors.ErrSomethingWentWrong, http.StatusInternalServerError)
 	}
 
-	if request.Relation == enum.CreatedByMe.String() {
+	if *request.Relation == enum.CreatedByMe.String() {
 		request.CreatorID = &currUserID
-	} else if request.Relation == enum.AssignedToMe.String() {
+	} else if *request.Relation == enum.AssignedToMe.String() {
 		request.AssignieID = &currUserID
 	}
 

@@ -53,13 +53,17 @@ func (m UserRegisterModel) Validate() error {
 }
 
 func (m TaskFilterModel) Validate() error {
-	if !enum.CheckTaskRelation(m.Relation) {
-		return fmt.Errorf("%s:%s", serverrors.ErrTaskRelationFilterInvalid, m.Relation)
+	if m.Relation != nil {
+		if !enum.CheckTaskRelation(*m.Relation) {
+			return fmt.Errorf("%s:%s", serverrors.ErrTaskRelationFilterInvalid, *m.Relation)
+		}
 	}
 
-	for _, status := range m.Status {
-		if !enum.CheckTaskStatus(status) {
-			return fmt.Errorf("%s:%s", serverrors.ErrTaskStatusInvalid, status)
+	if m.Status != nil {
+		for _, status := range m.Status {
+			if !enum.CheckTaskStatus(status) {
+				return fmt.Errorf("%s:%s", serverrors.ErrTaskStatusInvalid, status)
+			}
 		}
 	}
 
