@@ -83,3 +83,15 @@ func PrepareGetTaskSummaryRequest(t *testing.T, taskID int, cookie *http.Cookie)
 
 	return req
 }
+
+func PrepareCreateCommentRequest(t *testing.T, input dto.PostCommentRequest, cookie *http.Cookie) *http.Request {
+	jsonData, err := json.Marshal(input)
+	require.NoError(t, err, "Failed to marshal request body")
+
+	req, err := http.NewRequest("POST", "/comment", bytes.NewBuffer(jsonData))
+	require.NoError(t, err, "Failed to create request")
+	req.Header.Set("Content-Type", "application/json")
+	req.AddCookie(cookie)
+
+	return req
+}
