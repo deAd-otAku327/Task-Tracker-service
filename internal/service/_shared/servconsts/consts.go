@@ -1,7 +1,7 @@
 package servconsts
 
 const (
-	UsernameMaxLen = 10
+	UsernameMaxLen = 15
 	UsernameMinLen = 4
 	PasswordMinLen = 6
 	PasswordMaxLen = 30
